@@ -18,6 +18,8 @@ public final class WildsenseConfig {
     public static boolean trustEnabled = true;
     public static boolean stampedeEnabled = true;
     public static boolean babyAnchoringEnabled = true;
+    public static boolean breedingCrowdControlEnabled = true;
+    public static boolean breedingCrowdMessageEnabled = true;
 
     public static int fullAiRange = 48;
     public static int simpleAiRange = 96;
@@ -32,6 +34,8 @@ public final class WildsenseConfig {
     public static int panicCandidateCount = 10;
     public static int panicEscapeDistance = 12;
     public static int panicDropCheckDepth = 4;
+    public static int breedingCrowdRadius = 6;
+    public static int breedingCrowdHardLimit = 24;
 
     public static double panicSpeed = 1.35;
     public static double herdFollowSpeed = 1.05;
@@ -73,6 +77,8 @@ public final class WildsenseConfig {
         trustEnabled = bool(properties, "trustEnabled", trustEnabled);
         stampedeEnabled = bool(properties, "stampedeEnabled", stampedeEnabled);
         babyAnchoringEnabled = bool(properties, "babyAnchoringEnabled", babyAnchoringEnabled);
+        breedingCrowdControlEnabled = bool(properties, "breedingCrowdControlEnabled", breedingCrowdControlEnabled);
+        breedingCrowdMessageEnabled = bool(properties, "breedingCrowdMessageEnabled", breedingCrowdMessageEnabled);
 
         fullAiRange = integer(properties, "fullAiRange", fullAiRange);
         simpleAiRange = integer(properties, "simpleAiRange", simpleAiRange);
@@ -87,6 +93,8 @@ public final class WildsenseConfig {
         panicCandidateCount = integer(properties, "panicCandidateCount", panicCandidateCount);
         panicEscapeDistance = integer(properties, "panicEscapeDistance", panicEscapeDistance);
         panicDropCheckDepth = integer(properties, "panicDropCheckDepth", panicDropCheckDepth);
+        breedingCrowdRadius = integer(properties, "breedingCrowdRadius", breedingCrowdRadius);
+        breedingCrowdHardLimit = integer(properties, "breedingCrowdHardLimit", breedingCrowdHardLimit);
 
         panicSpeed = decimal(properties, "panicSpeed", panicSpeed);
         herdFollowSpeed = decimal(properties, "herdFollowSpeed", herdFollowSpeed);
@@ -109,6 +117,8 @@ public final class WildsenseConfig {
         properties.setProperty("trustEnabled", Boolean.toString(trustEnabled));
         properties.setProperty("stampedeEnabled", Boolean.toString(stampedeEnabled));
         properties.setProperty("babyAnchoringEnabled", Boolean.toString(babyAnchoringEnabled));
+        properties.setProperty("breedingCrowdControlEnabled", Boolean.toString(breedingCrowdControlEnabled));
+        properties.setProperty("breedingCrowdMessageEnabled", Boolean.toString(breedingCrowdMessageEnabled));
         properties.setProperty("fullAiRange", Integer.toString(fullAiRange));
         properties.setProperty("simpleAiRange", Integer.toString(simpleAiRange));
         properties.setProperty("alertRadius", Integer.toString(alertRadius));
@@ -122,6 +132,8 @@ public final class WildsenseConfig {
         properties.setProperty("panicCandidateCount", Integer.toString(panicCandidateCount));
         properties.setProperty("panicEscapeDistance", Integer.toString(panicEscapeDistance));
         properties.setProperty("panicDropCheckDepth", Integer.toString(panicDropCheckDepth));
+        properties.setProperty("breedingCrowdRadius", Integer.toString(breedingCrowdRadius));
+        properties.setProperty("breedingCrowdHardLimit", Integer.toString(breedingCrowdHardLimit));
         properties.setProperty("panicSpeed", Double.toString(panicSpeed));
         properties.setProperty("herdFollowSpeed", Double.toString(herdFollowSpeed));
         properties.setProperty("babyAnchorSpeed", Double.toString(babyAnchorSpeed));

@@ -103,6 +103,11 @@ public final class WildsenseCommand {
                 WildsenseConfig.trustEnabled,
                 WildsenseConfig.babyAnchoringEnabled,
                 WildsenseConfig.stampedeEnabled)), false);
+        source.sendSuccess(() -> Component.literal(String.format(
+                "  breedingCrowdControl=%s crowdRadius=%d crowdHardLimit=%d",
+                WildsenseConfig.breedingCrowdControlEnabled,
+                WildsenseConfig.breedingCrowdRadius,
+                WildsenseConfig.breedingCrowdHardLimit)), false);
         return 1;
     }
 

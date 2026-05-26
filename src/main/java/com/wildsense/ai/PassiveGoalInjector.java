@@ -10,9 +10,11 @@ import com.wildsense.config.WildsenseConfig;
 import com.wildsense.mixin.MobGoalSelectorAccessor;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
+import net.minecraft.world.phys.AABB;
 
 public final class PassiveGoalInjector {
     private PassiveGoalInjector() {
@@ -26,9 +28,16 @@ public final class PassiveGoalInjector {
         });
 
         UseEntityCallback.EVENT.register((player, level, hand, entity, hitResult) -> {
-            if (!WildsenseConfig.enabled || !WildsenseConfig.trustEnabled) return InteractionResult.PASS;
+            if (!WildsenseConfig.enabled) return InteractionResult.PASS;
             if (level.isClientSide()) return InteractionResult.PASS;
             if (entity instanceof Animal animal && animal.isFood(player.getItemInHand(hand))) {
+                if (shouldBlockCrowdedBreeding(animal)) {
+                    if (WildsenseConfig.breedingCrowdMessageEnabled) {
+                        player.sendSystemMessage(Component.literal("This pen is too crowded for more breeding."));
+                    }
+                    return InteractionResult.FAIL;
+                }
+                if (!WildsenseConfig.trustEnabled) return InteractionResult.PASS;
                 long until = level.getGameTime() + WildsenseConfig.trustTicks;
                 AnimalMemoryStore.get(animal).addTrust(player.getUUID(), WildsenseConfig.trustPerFeeding, until);
                 for (Animal herdMate : HerdCoordinator.nearbyHerd(animal)) {
@@ -40,6 +49,16 @@ public final class PassiveGoalInjector {
             }
             return InteractionResult.PASS;
         });
+    }
+
+    private static boolean shouldBlockCrowdedBreeding(Animal animal) {
+        if (!WildsenseConfig.breedingCrowdControlEnabled || animal.isBaby()) return false;
+        if (WildsenseConfig.breedingCrowdHardLimit <= 0) return false;
+        double radius = WildsenseConfig.breedingCrowdRadius;
+        AABB box = animal.getBoundingBox().inflate(radius);
+        int sameType = animal.level().getEntitiesOfClass(Animal.class, box,
+                other -> other.isAlive() && other.getType() == animal.getType()).size();
+        return sameType >= WildsenseConfig.breedingCrowdHardLimit;
     }
 
     private static void inject(Animal animal) {
