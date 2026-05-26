@@ -122,6 +122,13 @@ public final class AnimalMemory {
         }
         if (guardUntil > 0) output.putLong("GuardUntil", guardUntil);
         if (nextDangerSpreadAt > 0) output.putLong("NextSpread", nextDangerSpreadAt);
+        if (sharedShelter != null && sharedShelterUntil > 0) {
+            ValueOutput shared = output.child("SharedShelter");
+            shared.putInt(X, sharedShelter.getX());
+            shared.putInt(Y, sharedShelter.getY());
+            shared.putInt(Z, sharedShelter.getZ());
+            shared.putLong(UNTIL, sharedShelterUntil);
+        }
         if (homePos != null) {
             ValueOutput home = output.child(HOME);
             home.putInt(X, homePos.getX());
@@ -145,7 +152,19 @@ public final class AnimalMemory {
         homePos = null;
         guardUntil = input.getLongOr("GuardUntil", 0L);
         nextDangerSpreadAt = input.getLongOr("NextSpread", 0L);
+        sharedShelter = null;
+        sharedShelterUntil = 0L;
         trustedPlayers.clear();
+
+        ValueInput shared = input.childOrEmpty("SharedShelter");
+        long sharedUntil = shared.getLongOr(UNTIL, 0L);
+        if (sharedUntil > gameTime) {
+            sharedShelter = new BlockPos(
+                    shared.getIntOr(X, 0),
+                    shared.getIntOr(Y, 0),
+                    shared.getIntOr(Z, 0));
+            sharedShelterUntil = sharedUntil;
+        }
 
         ValueInput home = input.childOrEmpty(HOME);
         int hx = home.getIntOr(X, Integer.MIN_VALUE);

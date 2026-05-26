@@ -47,6 +47,8 @@ public final class ThreatScanner {
 
     private static boolean isThreat(Animal animal, Entity entity) {
         if (!entity.isAlive()) return false;
+        if (entity instanceof net.minecraft.world.entity.TamableAnimal tame
+                && (tame.isTame() || tame.isOrderedToSit())) return false;
         var holder = BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(entity.getType());
         if (holder.is(predatorsOf(animal))) return true;
         if (holder.is(WildsenseTags.PREDATORS)) return true;

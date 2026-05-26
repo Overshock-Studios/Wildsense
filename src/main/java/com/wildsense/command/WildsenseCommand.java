@@ -34,6 +34,10 @@ public final class WildsenseCommand {
                                 .executes(WildsenseCommand::reportAnimal))
                         .then(Commands.literal("config")
                                 .executes(WildsenseCommand::reportConfig))
+                        .then(Commands.literal("leader")
+                                .executes(WildsenseCommand::reportLeader))
+                        .then(Commands.literal("list")
+                                .executes(WildsenseCommand::listNearby))
                         .then(Commands.literal("reload")
                                 .executes(WildsenseCommand::reloadConfig))
                         .then(Commands.literal("home")
@@ -104,6 +108,51 @@ public final class WildsenseCommand {
                 "  home=%s guarding=%s",
                 home == null ? "none" : home.getX() + " " + home.getY() + " " + home.getZ(),
                 guarding)), false);
+        return 1;
+    }
+
+    private static int reportLeader(com.mojang.brigadier.context.CommandContext<CommandSourceStack> ctx) {
+        CommandSourceStack source = ctx.getSource();
+        ServerLevel level = source.getLevel();
+        AABB box = AABB.ofSize(source.getPosition(), ANIMAL_SCAN_SIZE, ANIMAL_SCAN_SIZE, ANIMAL_SCAN_SIZE);
+        Animal animal = level.getEntitiesOfClass(Animal.class, box).stream()
+                .min(Comparator.comparingDouble(c -> c.distanceToSqr(source.getPosition())))
+                .orElse(null);
+        if (animal == null) {
+            source.sendFailure(Component.literal("[Wildsense] No animal nearby."));
+            return 0;
+        }
+        Animal leader = HerdCoordinator.leaderFor(animal);
+        long now = level.getGameTime();
+        BlockPos shared = leader == null ? null : AnimalMemoryStore.get(leader).sharedShelter(now);
+        source.sendSuccess(() -> Component.literal(String.format(
+                "[Wildsense] %s#%d leader=%s herdSize=%d sharedShelter=%s",
+                animal.getType().toShortString(),
+                animal.getId(),
+                formatAnimal(leader),
+                HerdCoordinator.herdSize(animal),
+                shared == null ? "none" : shared.getX() + " " + shared.getY() + " " + shared.getZ())), false);
+        return 1;
+    }
+
+    private static int listNearby(com.mojang.brigadier.context.CommandContext<CommandSourceStack> ctx) {
+        CommandSourceStack source = ctx.getSource();
+        ServerLevel level = source.getLevel();
+        AABB box = AABB.ofSize(source.getPosition(), 64.0, 64.0, 64.0);
+        int total = 0, full = 0, simple = 0, sleep = 0, herdable = 0;
+        for (Animal a : level.getEntitiesOfClass(Animal.class, box)) {
+            total++;
+            if (HerdCoordinator.isHerdable(a)) herdable++;
+            switch (AiLod.computeFresh(a)) {
+                case FULL -> full++;
+                case SIMPLE -> simple++;
+                case SLEEP -> sleep++;
+            }
+        }
+        final int t = total, f = full, s = simple, sl = sleep, h = herdable;
+        source.sendSuccess(() -> Component.literal(String.format(
+                "[Wildsense] within 64: total=%d herdable=%d  LOD full=%d simple=%d sleep=%d",
+                t, h, f, s, sl)), false);
         return 1;
     }
 
