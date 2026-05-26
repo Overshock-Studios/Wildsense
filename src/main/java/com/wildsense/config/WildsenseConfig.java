@@ -57,6 +57,9 @@ public final class WildsenseConfig {
     public static int homeReturnMinDistance = 16;
     public static int homeReturnIntervalTicks = 20 * 30;
     public static double homeReturnSpeed = 0.9;
+    public static int alertFreezeMinTicks = 30;
+    public static int alertFreezeRandomTicks = 30;
+    public static double alertDriftSpeed = 0.65;
 
     public static double panicSpeed = 1.35;
     public static double herdFollowSpeed = 1.05;
@@ -213,6 +216,9 @@ public final class WildsenseConfig {
         homeReturnMinDistance = integer(properties, "homeReturnMinDistance", homeReturnMinDistance);
         homeReturnIntervalTicks = integer(properties, "homeReturnIntervalTicks", homeReturnIntervalTicks);
         homeReturnSpeed = decimal(properties, "homeReturnSpeed", homeReturnSpeed);
+        alertFreezeMinTicks = integer(properties, "alertFreezeMinTicks", alertFreezeMinTicks);
+        alertFreezeRandomTicks = integer(properties, "alertFreezeRandomTicks", alertFreezeRandomTicks);
+        alertDriftSpeed = decimal(properties, "alertDriftSpeed", alertDriftSpeed);
 
         panicSpeed = decimal(properties, "panicSpeed", panicSpeed);
         herdFollowSpeed = decimal(properties, "herdFollowSpeed", herdFollowSpeed);
@@ -273,6 +279,9 @@ public final class WildsenseConfig {
         properties.setProperty("homeReturnMinDistance", Integer.toString(homeReturnMinDistance));
         properties.setProperty("homeReturnIntervalTicks", Integer.toString(homeReturnIntervalTicks));
         properties.setProperty("homeReturnSpeed", Double.toString(homeReturnSpeed));
+        properties.setProperty("alertFreezeMinTicks", Integer.toString(alertFreezeMinTicks));
+        properties.setProperty("alertFreezeRandomTicks", Integer.toString(alertFreezeRandomTicks));
+        properties.setProperty("alertDriftSpeed", Double.toString(alertDriftSpeed));
         properties.setProperty("panicSpeed", Double.toString(panicSpeed));
         properties.setProperty("herdFollowSpeed", Double.toString(herdFollowSpeed));
         properties.setProperty("babyAnchorSpeed", Double.toString(babyAnchorSpeed));
