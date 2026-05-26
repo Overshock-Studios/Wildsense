@@ -29,6 +29,9 @@ public final class WildsenseConfig {
     public static int trustTicks = 20 * 60 * 20;
     public static int minStampedeHerdSize = 5;
     public static int babyAnchorSearchRadius = 14;
+    public static int panicCandidateCount = 10;
+    public static int panicEscapeDistance = 12;
+    public static int panicDropCheckDepth = 4;
 
     public static double panicSpeed = 1.35;
     public static double herdFollowSpeed = 1.05;
@@ -81,6 +84,9 @@ public final class WildsenseConfig {
         trustTicks = integer(properties, "trustTicks", trustTicks);
         minStampedeHerdSize = integer(properties, "minStampedeHerdSize", minStampedeHerdSize);
         babyAnchorSearchRadius = integer(properties, "babyAnchorSearchRadius", babyAnchorSearchRadius);
+        panicCandidateCount = integer(properties, "panicCandidateCount", panicCandidateCount);
+        panicEscapeDistance = integer(properties, "panicEscapeDistance", panicEscapeDistance);
+        panicDropCheckDepth = integer(properties, "panicDropCheckDepth", panicDropCheckDepth);
 
         panicSpeed = decimal(properties, "panicSpeed", panicSpeed);
         herdFollowSpeed = decimal(properties, "herdFollowSpeed", herdFollowSpeed);
@@ -113,6 +119,9 @@ public final class WildsenseConfig {
         properties.setProperty("trustTicks", Integer.toString(trustTicks));
         properties.setProperty("minStampedeHerdSize", Integer.toString(minStampedeHerdSize));
         properties.setProperty("babyAnchorSearchRadius", Integer.toString(babyAnchorSearchRadius));
+        properties.setProperty("panicCandidateCount", Integer.toString(panicCandidateCount));
+        properties.setProperty("panicEscapeDistance", Integer.toString(panicEscapeDistance));
+        properties.setProperty("panicDropCheckDepth", Integer.toString(panicDropCheckDepth));
         properties.setProperty("panicSpeed", Double.toString(panicSpeed));
         properties.setProperty("herdFollowSpeed", Double.toString(herdFollowSpeed));
         properties.setProperty("babyAnchorSpeed", Double.toString(babyAnchorSpeed));
