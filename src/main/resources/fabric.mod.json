@@ -15,6 +15,9 @@
       "com.wildsense.WildsenseMod"
     ]
   },
+  "mixins": [
+    "wildsense.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=0.19.2",
     "minecraft": "~26.1",
