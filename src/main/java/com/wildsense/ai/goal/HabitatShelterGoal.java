@@ -26,8 +26,10 @@ public final class HabitatShelterGoal extends Goal implements WildsenseGoal {
         if (!WildsenseConfig.enabled || !WildsenseConfig.habitatEnabled || AiLod.forAnimal(animal) != AiLod.FULL) return false;
         if (WildsenseAnimalRules.skipMovementGoals(animal)) return false;
         if (animal.tickCount < nextScanTick) return false;
-        nextScanTick = animal.tickCount + 80 + animal.getRandom().nextInt(80);
         Level level = animal.level();
+        boolean thundering = level.isThundering();
+        int cooldown = thundering ? 20 : 80;
+        nextScanTick = animal.tickCount + cooldown + animal.getRandom().nextInt(cooldown);
         if (!level.isRaining() && level.isBrightOutside()) return false;
         shelter = findShelter(level, animal.blockPosition());
         return shelter != null && animal.blockPosition().distSqr(shelter) > 6.0;
@@ -40,7 +42,10 @@ public final class HabitatShelterGoal extends Goal implements WildsenseGoal {
 
     @Override
     public void start() {
-        animal.getNavigation().moveTo(shelter.getX() + 0.5, shelter.getY(), shelter.getZ() + 0.5, WildsenseConfig.shelterSpeed);
+        double speed = animal.level().isThundering()
+                ? WildsenseConfig.shelterSpeed * 1.4
+                : WildsenseConfig.shelterSpeed;
+        animal.getNavigation().moveTo(shelter.getX() + 0.5, shelter.getY(), shelter.getZ() + 0.5, speed);
     }
 
     @Override
