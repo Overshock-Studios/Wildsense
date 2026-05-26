@@ -30,6 +30,7 @@ public final class WildsenseConfig {
     public static int herdSearchRadius = 16;
     public static int shelterSearchRadius = 10;
     public static int memoryTicks = 20 * 30;
+    public static int herdDangerSpreadCooldownTicks = 20;
     public static int trustTicks = 20 * 60 * 20;
     public static int minStampedeHerdSize = 5;
     public static int babyAnchorSearchRadius = 14;
@@ -94,6 +95,7 @@ public final class WildsenseConfig {
         herdSearchRadius = integer(properties, "herdSearchRadius", herdSearchRadius);
         shelterSearchRadius = integer(properties, "shelterSearchRadius", shelterSearchRadius);
         memoryTicks = integer(properties, "memoryTicks", memoryTicks);
+        herdDangerSpreadCooldownTicks = integer(properties, "herdDangerSpreadCooldownTicks", herdDangerSpreadCooldownTicks);
         trustTicks = integer(properties, "trustTicks", trustTicks);
         minStampedeHerdSize = integer(properties, "minStampedeHerdSize", minStampedeHerdSize);
         babyAnchorSearchRadius = integer(properties, "babyAnchorSearchRadius", babyAnchorSearchRadius);
@@ -138,6 +140,7 @@ public final class WildsenseConfig {
         properties.setProperty("herdSearchRadius", Integer.toString(herdSearchRadius));
         properties.setProperty("shelterSearchRadius", Integer.toString(shelterSearchRadius));
         properties.setProperty("memoryTicks", Integer.toString(memoryTicks));
+        properties.setProperty("herdDangerSpreadCooldownTicks", Integer.toString(herdDangerSpreadCooldownTicks));
         properties.setProperty("trustTicks", Integer.toString(trustTicks));
         properties.setProperty("minStampedeHerdSize", Integer.toString(minStampedeHerdSize));
         properties.setProperty("babyAnchorSearchRadius", Integer.toString(babyAnchorSearchRadius));

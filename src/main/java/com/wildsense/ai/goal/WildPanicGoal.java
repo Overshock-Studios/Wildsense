@@ -3,6 +3,7 @@ package com.wildsense.ai.goal;
 import com.wildsense.ai.AiLod;
 import com.wildsense.ai.AnimalMemory;
 import com.wildsense.ai.AnimalMemoryStore;
+import com.wildsense.ai.DangerBroadcaster;
 import com.wildsense.ai.HerdCoordinator;
 import com.wildsense.ai.ThreatScanner;
 import com.wildsense.compat.WildsenseTags;
@@ -35,7 +36,7 @@ public final class WildPanicGoal extends Goal implements WildsenseGoal {
         Entity threat = ThreatScanner.nearestThreat(animal, WildsenseConfig.panicRadius);
         if (threat != null) {
             danger = threat.position();
-            memory.rememberDanger(danger, animal.level().getGameTime() + WildsenseConfig.memoryTicks);
+            DangerBroadcaster.rememberAndSpread(animal, danger);
             return true;
         }
         danger = memory.dangerPos(animal.level().getGameTime());

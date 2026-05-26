@@ -90,13 +90,14 @@ public final class WildsenseCommand {
     private static int reportConfig(com.mojang.brigadier.context.CommandContext<CommandSourceStack> ctx) {
         CommandSourceStack source = ctx.getSource();
         source.sendSuccess(() -> Component.literal(String.format(
-                "[Wildsense] enabled=%s fullAiRange=%d simpleAiRange=%d aiLodCacheTicks=%d panicRadius=%d alertRadius=%d",
+                "[Wildsense] enabled=%s fullAiRange=%d simpleAiRange=%d aiLodCacheTicks=%d panicRadius=%d alertRadius=%d dangerSpreadCooldown=%d",
                 WildsenseConfig.enabled,
                 WildsenseConfig.fullAiRange,
                 WildsenseConfig.simpleAiRange,
                 WildsenseConfig.aiLodCacheTicks,
                 WildsenseConfig.panicRadius,
-                WildsenseConfig.alertRadius)), false);
+                WildsenseConfig.alertRadius,
+                WildsenseConfig.herdDangerSpreadCooldownTicks)), false);
         source.sendSuccess(() -> Component.literal(String.format(
                 "  herd=%s habitat=%s dailyRhythm=%s trust=%s babyAnchoring=%s stampede=%s",
                 WildsenseConfig.herdEnabled,
