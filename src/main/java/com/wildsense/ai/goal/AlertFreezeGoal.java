@@ -15,6 +15,7 @@ public final class AlertFreezeGoal extends Goal implements WildsenseGoal {
     private Entity threat;
     private int alertTicks;
     private int initialTicks;
+    private int nextAllowedTick;
 
     public AlertFreezeGoal(Animal animal) {
         this.animal = animal;
@@ -25,6 +26,7 @@ public final class AlertFreezeGoal extends Goal implements WildsenseGoal {
     public boolean canUse() {
         if (!WildsenseConfig.enabled || !WildsenseConfig.alertEnabled || AiLod.forAnimal(animal) != AiLod.FULL) return false;
         if (WildsenseAnimalRules.skipMovementGoals(animal)) return false;
+        if (animal.tickCount < nextAllowedTick) return false;
         threat = ThreatScanner.nearestThreat(animal, WildsenseConfig.alertRadius);
         if (threat == null) return false;
         return animal.distanceToSqr(threat) > WildsenseConfig.panicRadius * WildsenseConfig.panicRadius;
@@ -68,5 +70,6 @@ public final class AlertFreezeGoal extends Goal implements WildsenseGoal {
         threat = null;
         alertTicks = 0;
         initialTicks = 0;
+        nextAllowedTick = animal.tickCount + 60 + animal.getRandom().nextInt(60);
     }
 }

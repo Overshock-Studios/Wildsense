@@ -28,6 +28,8 @@ public final class AnimalMemory {
     private BlockPos homePos;
     private BlockPos sharedShelter;
     private long sharedShelterUntil;
+    private BlockPos sharedGraze;
+    private long sharedGrazeUntil;
     private final Map<UUID, TrustEntry> trustedPlayers = new HashMap<>();
 
     public void rememberDanger(Vec3 pos, long untilTick) {
@@ -50,6 +52,26 @@ public final class AnimalMemory {
 
     public BlockPos sharedShelter(long gameTime) {
         return gameTime <= sharedShelterUntil ? sharedShelter : null;
+    }
+
+    public void setSharedGraze(BlockPos pos, long untilTick) {
+        this.sharedGraze = pos == null ? null : pos.immutable();
+        this.sharedGrazeUntil = untilTick;
+    }
+
+    public BlockPos sharedGraze(long gameTime) {
+        return gameTime <= sharedGrazeUntil ? sharedGraze : null;
+    }
+
+    public void forget() {
+        dangerPos = null;
+        dangerUntil = 0L;
+        homePos = null;
+        guardUntil = 0L;
+        sharedShelter = null;
+        sharedShelterUntil = 0L;
+        sharedGraze = null;
+        sharedGrazeUntil = 0L;
     }
 
     public void markGuarding(long untilTick) {
@@ -129,6 +151,13 @@ public final class AnimalMemory {
             shared.putInt(Z, sharedShelter.getZ());
             shared.putLong(UNTIL, sharedShelterUntil);
         }
+        if (sharedGraze != null && sharedGrazeUntil > 0) {
+            ValueOutput shared = output.child("SharedGraze");
+            shared.putInt(X, sharedGraze.getX());
+            shared.putInt(Y, sharedGraze.getY());
+            shared.putInt(Z, sharedGraze.getZ());
+            shared.putLong(UNTIL, sharedGrazeUntil);
+        }
         if (homePos != null) {
             ValueOutput home = output.child(HOME);
             home.putInt(X, homePos.getX());
@@ -154,6 +183,8 @@ public final class AnimalMemory {
         nextDangerSpreadAt = input.getLongOr("NextSpread", 0L);
         sharedShelter = null;
         sharedShelterUntil = 0L;
+        sharedGraze = null;
+        sharedGrazeUntil = 0L;
         trustedPlayers.clear();
 
         ValueInput shared = input.childOrEmpty("SharedShelter");
@@ -164,6 +195,16 @@ public final class AnimalMemory {
                     shared.getIntOr(Y, 0),
                     shared.getIntOr(Z, 0));
             sharedShelterUntil = sharedUntil;
+        }
+
+        ValueInput sg = input.childOrEmpty("SharedGraze");
+        long sgUntil = sg.getLongOr(UNTIL, 0L);
+        if (sgUntil > gameTime) {
+            sharedGraze = new BlockPos(
+                    sg.getIntOr(X, 0),
+                    sg.getIntOr(Y, 0),
+                    sg.getIntOr(Z, 0));
+            sharedGrazeUntil = sgUntil;
         }
 
         ValueInput home = input.childOrEmpty(HOME);

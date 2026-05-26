@@ -43,6 +43,8 @@ public final class WildsenseCommand {
                         .then(Commands.literal("home")
                                 .then(Commands.literal("clear")
                                         .executes(WildsenseCommand::clearHome)))
+                        .then(Commands.literal("forget")
+                                .executes(WildsenseCommand::forgetNearest))
                         .then(Commands.literal("profile")
                                 .then(Commands.argument("name", com.mojang.brigadier.arguments.StringArgumentType.word())
                                         .suggests((c, b) -> {
@@ -108,6 +110,22 @@ public final class WildsenseCommand {
                 "  home=%s guarding=%s",
                 home == null ? "none" : home.getX() + " " + home.getY() + " " + home.getZ(),
                 guarding)), false);
+        return 1;
+    }
+
+    private static int forgetNearest(com.mojang.brigadier.context.CommandContext<CommandSourceStack> ctx) {
+        CommandSourceStack source = ctx.getSource();
+        ServerLevel level = source.getLevel();
+        AABB box = AABB.ofSize(source.getPosition(), ANIMAL_SCAN_SIZE, ANIMAL_SCAN_SIZE, ANIMAL_SCAN_SIZE);
+        Animal animal = level.getEntitiesOfClass(Animal.class, box).stream()
+                .min(Comparator.comparingDouble(c -> c.distanceToSqr(source.getPosition())))
+                .orElse(null);
+        if (animal == null) {
+            source.sendFailure(Component.literal("[Wildsense] No animal nearby."));
+            return 0;
+        }
+        AnimalMemoryStore.get(animal).forget();
+        source.sendSuccess(() -> Component.literal("[Wildsense] Forgot memory for " + animal.getType().toShortString() + "#" + animal.getId()), false);
         return 1;
     }
 
