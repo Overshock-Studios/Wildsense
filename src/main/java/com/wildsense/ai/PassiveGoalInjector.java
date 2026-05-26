@@ -55,12 +55,17 @@ public final class PassiveGoalInjector {
 
     private static boolean shouldBlockCrowdedBreeding(Animal animal) {
         if (!WildsenseConfig.breedingCrowdControlEnabled || animal.isBaby()) return false;
-        if (WildsenseConfig.breedingCrowdHardLimit <= 0) return false;
+        int hard = WildsenseConfig.breedingCrowdHardLimit;
+        if (hard <= 0) return false;
         double radius = WildsenseConfig.breedingCrowdRadius;
         AABB box = animal.getBoundingBox().inflate(radius);
         int sameType = animal.level().getEntitiesOfClass(Animal.class, box,
                 other -> other.isAlive() && other.getType() == animal.getType()).size();
-        return sameType >= WildsenseConfig.breedingCrowdHardLimit;
+        if (sameType >= hard) return true;
+        int soft = Math.min(WildsenseConfig.breedingCrowdSoftLimit, hard);
+        if (soft <= 0 || sameType < soft) return false;
+        double chance = (double) (sameType - soft) / Math.max(1, hard - soft);
+        return animal.getRandom().nextDouble() < chance;
     }
 
     private static void inject(Animal animal) {

@@ -42,6 +42,7 @@ public final class WildsenseConfig {
     public static int panicDropCheckDepth = 4;
     public static int breedingCrowdRadius = 6;
     public static int breedingCrowdHardLimit = 24;
+    public static int breedingCrowdSoftLimit = 8;
     public static int grazeSearchRadius = 5;
     public static int grazeMinIntervalTicks = 20 * 12;
     public static int grazeDurationTicks = 20 * 4;
@@ -192,6 +193,7 @@ public final class WildsenseConfig {
         panicDropCheckDepth = integer(properties, "panicDropCheckDepth", panicDropCheckDepth);
         breedingCrowdRadius = integer(properties, "breedingCrowdRadius", breedingCrowdRadius);
         breedingCrowdHardLimit = integer(properties, "breedingCrowdHardLimit", breedingCrowdHardLimit);
+        breedingCrowdSoftLimit = integer(properties, "breedingCrowdSoftLimit", breedingCrowdSoftLimit);
         grazeSearchRadius = integer(properties, "grazeSearchRadius", grazeSearchRadius);
         grazeMinIntervalTicks = integer(properties, "grazeMinIntervalTicks", grazeMinIntervalTicks);
         grazeDurationTicks = integer(properties, "grazeDurationTicks", grazeDurationTicks);
@@ -246,6 +248,7 @@ public final class WildsenseConfig {
         properties.setProperty("panicDropCheckDepth", Integer.toString(panicDropCheckDepth));
         properties.setProperty("breedingCrowdRadius", Integer.toString(breedingCrowdRadius));
         properties.setProperty("breedingCrowdHardLimit", Integer.toString(breedingCrowdHardLimit));
+        properties.setProperty("breedingCrowdSoftLimit", Integer.toString(breedingCrowdSoftLimit));
         properties.setProperty("grazeSearchRadius", Integer.toString(grazeSearchRadius));
         properties.setProperty("grazeMinIntervalTicks", Integer.toString(grazeMinIntervalTicks));
         properties.setProperty("grazeDurationTicks", Integer.toString(grazeDurationTicks));
