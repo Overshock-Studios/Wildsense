@@ -98,9 +98,10 @@ public final class WildsenseCommand {
                 WildsenseConfig.panicRadius,
                 WildsenseConfig.alertRadius)), false);
         source.sendSuccess(() -> Component.literal(String.format(
-                "  herd=%s habitat=%s trust=%s babyAnchoring=%s stampede=%s",
+                "  herd=%s habitat=%s dailyRhythm=%s trust=%s babyAnchoring=%s stampede=%s",
                 WildsenseConfig.herdEnabled,
                 WildsenseConfig.habitatEnabled,
+                WildsenseConfig.dailyRhythmEnabled,
                 WildsenseConfig.trustEnabled,
                 WildsenseConfig.babyAnchoringEnabled,
                 WildsenseConfig.stampedeEnabled)), false);

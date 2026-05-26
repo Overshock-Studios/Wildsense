@@ -20,6 +20,7 @@ public final class WildsenseConfig {
     public static boolean babyAnchoringEnabled = true;
     public static boolean breedingCrowdControlEnabled = true;
     public static boolean breedingCrowdMessageEnabled = true;
+    public static boolean dailyRhythmEnabled = true;
 
     public static int fullAiRange = 48;
     public static int simpleAiRange = 96;
@@ -37,6 +38,9 @@ public final class WildsenseConfig {
     public static int panicDropCheckDepth = 4;
     public static int breedingCrowdRadius = 6;
     public static int breedingCrowdHardLimit = 24;
+    public static int grazeSearchRadius = 5;
+    public static int grazeMinIntervalTicks = 20 * 12;
+    public static int grazeDurationTicks = 20 * 4;
 
     public static double panicSpeed = 1.35;
     public static double herdFollowSpeed = 1.05;
@@ -80,6 +84,7 @@ public final class WildsenseConfig {
         babyAnchoringEnabled = bool(properties, "babyAnchoringEnabled", babyAnchoringEnabled);
         breedingCrowdControlEnabled = bool(properties, "breedingCrowdControlEnabled", breedingCrowdControlEnabled);
         breedingCrowdMessageEnabled = bool(properties, "breedingCrowdMessageEnabled", breedingCrowdMessageEnabled);
+        dailyRhythmEnabled = bool(properties, "dailyRhythmEnabled", dailyRhythmEnabled);
 
         fullAiRange = integer(properties, "fullAiRange", fullAiRange);
         simpleAiRange = integer(properties, "simpleAiRange", simpleAiRange);
@@ -97,6 +102,9 @@ public final class WildsenseConfig {
         panicDropCheckDepth = integer(properties, "panicDropCheckDepth", panicDropCheckDepth);
         breedingCrowdRadius = integer(properties, "breedingCrowdRadius", breedingCrowdRadius);
         breedingCrowdHardLimit = integer(properties, "breedingCrowdHardLimit", breedingCrowdHardLimit);
+        grazeSearchRadius = integer(properties, "grazeSearchRadius", grazeSearchRadius);
+        grazeMinIntervalTicks = integer(properties, "grazeMinIntervalTicks", grazeMinIntervalTicks);
+        grazeDurationTicks = integer(properties, "grazeDurationTicks", grazeDurationTicks);
 
         panicSpeed = decimal(properties, "panicSpeed", panicSpeed);
         herdFollowSpeed = decimal(properties, "herdFollowSpeed", herdFollowSpeed);
@@ -121,6 +129,7 @@ public final class WildsenseConfig {
         properties.setProperty("babyAnchoringEnabled", Boolean.toString(babyAnchoringEnabled));
         properties.setProperty("breedingCrowdControlEnabled", Boolean.toString(breedingCrowdControlEnabled));
         properties.setProperty("breedingCrowdMessageEnabled", Boolean.toString(breedingCrowdMessageEnabled));
+        properties.setProperty("dailyRhythmEnabled", Boolean.toString(dailyRhythmEnabled));
         properties.setProperty("fullAiRange", Integer.toString(fullAiRange));
         properties.setProperty("simpleAiRange", Integer.toString(simpleAiRange));
         properties.setProperty("aiLodCacheTicks", Integer.toString(aiLodCacheTicks));
@@ -137,6 +146,9 @@ public final class WildsenseConfig {
         properties.setProperty("panicDropCheckDepth", Integer.toString(panicDropCheckDepth));
         properties.setProperty("breedingCrowdRadius", Integer.toString(breedingCrowdRadius));
         properties.setProperty("breedingCrowdHardLimit", Integer.toString(breedingCrowdHardLimit));
+        properties.setProperty("grazeSearchRadius", Integer.toString(grazeSearchRadius));
+        properties.setProperty("grazeMinIntervalTicks", Integer.toString(grazeMinIntervalTicks));
+        properties.setProperty("grazeDurationTicks", Integer.toString(grazeDurationTicks));
         properties.setProperty("panicSpeed", Double.toString(panicSpeed));
         properties.setProperty("herdFollowSpeed", Double.toString(herdFollowSpeed));
         properties.setProperty("babyAnchorSpeed", Double.toString(babyAnchorSpeed));

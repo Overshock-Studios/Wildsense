@@ -2,6 +2,7 @@ package com.wildsense.ai;
 
 import com.wildsense.ai.goal.AlertFreezeGoal;
 import com.wildsense.ai.goal.BabyAnchorGoal;
+import com.wildsense.ai.goal.GrazeRestGoal;
 import com.wildsense.ai.goal.HabitatShelterGoal;
 import com.wildsense.ai.goal.HerdFollowGoal;
 import com.wildsense.ai.goal.WildPanicGoal;
@@ -69,6 +70,7 @@ public final class PassiveGoalInjector {
         accessor.wildsense$goalSelector().addGoal(2, new AlertFreezeGoal(animal));
         accessor.wildsense$goalSelector().addGoal(5, new HabitatShelterGoal(animal));
         accessor.wildsense$goalSelector().addGoal(6, new HerdFollowGoal(animal));
+        accessor.wildsense$goalSelector().addGoal(8, new GrazeRestGoal(animal));
     }
 
     private static boolean hasWildsenseGoal(Animal animal) {
