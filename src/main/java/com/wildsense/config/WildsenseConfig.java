@@ -17,6 +17,7 @@ public final class WildsenseConfig {
     public static boolean habitatEnabled = true;
     public static boolean trustEnabled = true;
     public static boolean stampedeEnabled = true;
+    public static boolean babyAnchoringEnabled = true;
 
     public static int fullAiRange = 48;
     public static int simpleAiRange = 96;
@@ -27,11 +28,17 @@ public final class WildsenseConfig {
     public static int memoryTicks = 20 * 30;
     public static int trustTicks = 20 * 60 * 20;
     public static int minStampedeHerdSize = 5;
+    public static int babyAnchorSearchRadius = 14;
 
     public static double panicSpeed = 1.35;
     public static double herdFollowSpeed = 1.05;
+    public static double babyAnchorSpeed = 1.2;
     public static double shelterSpeed = 1.0;
     public static double stampedeKnockback = 0.35;
+    public static double stampedeHerdScaling = 0.08;
+    public static double trustPerFeeding = 0.22;
+    public static double herdTrustShareMultiplier = 0.35;
+    public static double trustedPlayerFleeReduction = 0.65;
 
     private WildsenseConfig() {
     }
@@ -62,6 +69,7 @@ public final class WildsenseConfig {
         habitatEnabled = bool(properties, "habitatEnabled", habitatEnabled);
         trustEnabled = bool(properties, "trustEnabled", trustEnabled);
         stampedeEnabled = bool(properties, "stampedeEnabled", stampedeEnabled);
+        babyAnchoringEnabled = bool(properties, "babyAnchoringEnabled", babyAnchoringEnabled);
 
         fullAiRange = integer(properties, "fullAiRange", fullAiRange);
         simpleAiRange = integer(properties, "simpleAiRange", simpleAiRange);
@@ -72,11 +80,17 @@ public final class WildsenseConfig {
         memoryTicks = integer(properties, "memoryTicks", memoryTicks);
         trustTicks = integer(properties, "trustTicks", trustTicks);
         minStampedeHerdSize = integer(properties, "minStampedeHerdSize", minStampedeHerdSize);
+        babyAnchorSearchRadius = integer(properties, "babyAnchorSearchRadius", babyAnchorSearchRadius);
 
         panicSpeed = decimal(properties, "panicSpeed", panicSpeed);
         herdFollowSpeed = decimal(properties, "herdFollowSpeed", herdFollowSpeed);
+        babyAnchorSpeed = decimal(properties, "babyAnchorSpeed", babyAnchorSpeed);
         shelterSpeed = decimal(properties, "shelterSpeed", shelterSpeed);
         stampedeKnockback = decimal(properties, "stampedeKnockback", stampedeKnockback);
+        stampedeHerdScaling = decimal(properties, "stampedeHerdScaling", stampedeHerdScaling);
+        trustPerFeeding = decimal(properties, "trustPerFeeding", trustPerFeeding);
+        herdTrustShareMultiplier = decimal(properties, "herdTrustShareMultiplier", herdTrustShareMultiplier);
+        trustedPlayerFleeReduction = decimal(properties, "trustedPlayerFleeReduction", trustedPlayerFleeReduction);
     }
 
     private static Properties defaults() {
@@ -88,6 +102,7 @@ public final class WildsenseConfig {
         properties.setProperty("habitatEnabled", Boolean.toString(habitatEnabled));
         properties.setProperty("trustEnabled", Boolean.toString(trustEnabled));
         properties.setProperty("stampedeEnabled", Boolean.toString(stampedeEnabled));
+        properties.setProperty("babyAnchoringEnabled", Boolean.toString(babyAnchoringEnabled));
         properties.setProperty("fullAiRange", Integer.toString(fullAiRange));
         properties.setProperty("simpleAiRange", Integer.toString(simpleAiRange));
         properties.setProperty("alertRadius", Integer.toString(alertRadius));
@@ -97,10 +112,16 @@ public final class WildsenseConfig {
         properties.setProperty("memoryTicks", Integer.toString(memoryTicks));
         properties.setProperty("trustTicks", Integer.toString(trustTicks));
         properties.setProperty("minStampedeHerdSize", Integer.toString(minStampedeHerdSize));
+        properties.setProperty("babyAnchorSearchRadius", Integer.toString(babyAnchorSearchRadius));
         properties.setProperty("panicSpeed", Double.toString(panicSpeed));
         properties.setProperty("herdFollowSpeed", Double.toString(herdFollowSpeed));
+        properties.setProperty("babyAnchorSpeed", Double.toString(babyAnchorSpeed));
         properties.setProperty("shelterSpeed", Double.toString(shelterSpeed));
         properties.setProperty("stampedeKnockback", Double.toString(stampedeKnockback));
+        properties.setProperty("stampedeHerdScaling", Double.toString(stampedeHerdScaling));
+        properties.setProperty("trustPerFeeding", Double.toString(trustPerFeeding));
+        properties.setProperty("herdTrustShareMultiplier", Double.toString(herdTrustShareMultiplier));
+        properties.setProperty("trustedPlayerFleeReduction", Double.toString(trustedPlayerFleeReduction));
         return properties;
     }
 

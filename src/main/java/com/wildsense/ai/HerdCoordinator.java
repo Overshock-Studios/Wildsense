@@ -33,6 +33,16 @@ public final class HerdCoordinator {
                 .orElse(null);
     }
 
+    public static Animal nearestAdultForBaby(Animal baby, double radius) {
+        if (!(baby.level() instanceof ServerLevel level) || !baby.isBaby()) return null;
+        AABB box = baby.getBoundingBox().inflate(radius);
+        return level.getEntitiesOfClass(Animal.class, box, other ->
+                        other.isAlive() && !other.isBaby() && other.getType() == baby.getType())
+                .stream()
+                .min(Comparator.comparingDouble(baby::distanceToSqr))
+                .orElse(null);
+    }
+
     public static int herdSize(Animal animal) {
         return nearbyHerd(animal).size() + 1;
     }

@@ -72,12 +72,14 @@ public final class WildPanicGoal extends Goal implements WildsenseGoal {
     }
 
     private void applyStampedeBump() {
+        int herdSize = HerdCoordinator.herdSize(animal);
         AABB box = animal.getBoundingBox().inflate(0.45);
         Vec3 motion = animal.getDeltaMovement();
         if (motion.horizontalDistanceSqr() < 0.01) return;
-        Vec3 push = motion.normalize().scale(WildsenseConfig.stampedeKnockback);
+        double scale = 1.0 + Math.max(0, herdSize - WildsenseConfig.minStampedeHerdSize) * WildsenseConfig.stampedeHerdScaling;
+        Vec3 push = motion.normalize().scale(WildsenseConfig.stampedeKnockback * scale);
         for (Entity entity : animal.level().getEntities(animal, box, entity -> entity.isAlive() && entity.isPushable())) {
-            entity.push(push.x, 0.08, push.z);
+            entity.push(push.x, 0.08 * scale, push.z);
         }
     }
 }

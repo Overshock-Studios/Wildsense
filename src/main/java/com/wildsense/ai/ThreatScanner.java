@@ -33,10 +33,12 @@ public final class ThreatScanner {
         if (BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(entity.getType()).is(WildsenseTags.PREDATORS)) return true;
         if (entity instanceof Player player) {
             long gameTime = animal.level().getGameTime();
-            if (WildsenseConfig.trustEnabled && AnimalMemoryStore.get(animal).trusts(player.getUUID(), gameTime)) {
-                return false;
-            }
-            return player.isSprinting() && player.distanceToSqr(animal) < 36.0;
+            double trust = WildsenseConfig.trustEnabled
+                    ? AnimalMemoryStore.get(animal).trustScore(player.getUUID(), gameTime)
+                    : 0.0;
+            double fleeScale = 1.0 - trust * WildsenseConfig.trustedPlayerFleeReduction;
+            double fleeDistance = 6.0 * Math.max(0.2, fleeScale);
+            return player.isSprinting() && player.distanceToSqr(animal) < fleeDistance * fleeDistance;
         }
         return false;
     }

@@ -1,6 +1,7 @@
 package com.wildsense.ai;
 
 import com.wildsense.ai.goal.AlertFreezeGoal;
+import com.wildsense.ai.goal.BabyAnchorGoal;
 import com.wildsense.ai.goal.HabitatShelterGoal;
 import com.wildsense.ai.goal.HerdFollowGoal;
 import com.wildsense.ai.goal.WildPanicGoal;
@@ -29,7 +30,13 @@ public final class PassiveGoalInjector {
             if (level.isClientSide()) return InteractionResult.PASS;
             if (entity instanceof Animal animal && animal.isFood(player.getItemInHand(hand))) {
                 long until = level.getGameTime() + WildsenseConfig.trustTicks;
-                AnimalMemoryStore.get(animal).trust(player.getUUID(), until);
+                AnimalMemoryStore.get(animal).addTrust(player.getUUID(), WildsenseConfig.trustPerFeeding, until);
+                for (Animal herdMate : HerdCoordinator.nearbyHerd(animal)) {
+                    AnimalMemoryStore.get(herdMate).addTrust(
+                            player.getUUID(),
+                            WildsenseConfig.trustPerFeeding * WildsenseConfig.herdTrustShareMultiplier,
+                            until);
+                }
             }
             return InteractionResult.PASS;
         });
@@ -38,6 +45,7 @@ public final class PassiveGoalInjector {
     private static void inject(Animal animal) {
         if (!WildsenseConfig.enabled || hasWildsenseGoal(animal)) return;
         MobGoalSelectorAccessor accessor = (MobGoalSelectorAccessor) animal;
+        accessor.wildsense$goalSelector().addGoal(0, new BabyAnchorGoal(animal));
         accessor.wildsense$goalSelector().addGoal(1, new WildPanicGoal(animal));
         accessor.wildsense$goalSelector().addGoal(2, new AlertFreezeGoal(animal));
         accessor.wildsense$goalSelector().addGoal(5, new HabitatShelterGoal(animal));
