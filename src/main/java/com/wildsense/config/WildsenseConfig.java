@@ -23,6 +23,7 @@ public final class WildsenseConfig {
 
     public static int fullAiRange = 48;
     public static int simpleAiRange = 96;
+    public static int aiLodCacheTicks = 20;
     public static int alertRadius = 18;
     public static int panicRadius = 8;
     public static int herdSearchRadius = 16;
@@ -82,6 +83,7 @@ public final class WildsenseConfig {
 
         fullAiRange = integer(properties, "fullAiRange", fullAiRange);
         simpleAiRange = integer(properties, "simpleAiRange", simpleAiRange);
+        aiLodCacheTicks = integer(properties, "aiLodCacheTicks", aiLodCacheTicks);
         alertRadius = integer(properties, "alertRadius", alertRadius);
         panicRadius = integer(properties, "panicRadius", panicRadius);
         herdSearchRadius = integer(properties, "herdSearchRadius", herdSearchRadius);
@@ -121,6 +123,7 @@ public final class WildsenseConfig {
         properties.setProperty("breedingCrowdMessageEnabled", Boolean.toString(breedingCrowdMessageEnabled));
         properties.setProperty("fullAiRange", Integer.toString(fullAiRange));
         properties.setProperty("simpleAiRange", Integer.toString(simpleAiRange));
+        properties.setProperty("aiLodCacheTicks", Integer.toString(aiLodCacheTicks));
         properties.setProperty("alertRadius", Integer.toString(alertRadius));
         properties.setProperty("panicRadius", Integer.toString(panicRadius));
         properties.setProperty("herdSearchRadius", Integer.toString(herdSearchRadius));

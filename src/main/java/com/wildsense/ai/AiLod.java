@@ -5,13 +5,38 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.animal.Animal;
 
+import java.util.Map;
+import java.util.WeakHashMap;
+
 public enum AiLod {
     FULL,
     SIMPLE,
     SLEEP;
 
+    private static final Map<Animal, CachedLod> CACHE = new WeakHashMap<>();
+
     public static AiLod forAnimal(Animal animal) {
         if (!(animal.level() instanceof ServerLevel level)) return SLEEP;
+        long now = level.getGameTime();
+        CachedLod cached = CACHE.get(animal);
+        if (cached != null && now < cached.expiresAt) {
+            return cached.lod;
+        }
+        AiLod lod = compute(animal, level);
+        int cacheTicks = Math.max(1, WildsenseConfig.aiLodCacheTicks);
+        int jitter = Math.floorMod(animal.getId(), cacheTicks);
+        CACHE.put(animal, new CachedLod(lod, now + cacheTicks + jitter));
+        return lod;
+    }
+
+    public static AiLod computeFresh(Animal animal) {
+        if (!(animal.level() instanceof ServerLevel level)) return SLEEP;
+        AiLod lod = compute(animal, level);
+        CACHE.put(animal, new CachedLod(lod, level.getGameTime() + Math.max(1, WildsenseConfig.aiLodCacheTicks)));
+        return lod;
+    }
+
+    private static AiLod compute(Animal animal, ServerLevel level) {
         double nearest = Double.MAX_VALUE;
         for (ServerPlayer player : level.players()) {
             if (player.isSpectator()) continue;
@@ -22,5 +47,8 @@ public enum AiLod {
         int simple = WildsenseConfig.simpleAiRange;
         if (nearest <= (double) simple * simple) return SIMPLE;
         return SLEEP;
+    }
+
+    private record CachedLod(AiLod lod, long expiresAt) {
     }
 }
