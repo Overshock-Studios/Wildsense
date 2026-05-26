@@ -30,6 +30,10 @@ public final class AnimalMemory {
         return gameTime <= dangerUntil ? dangerPos : null;
     }
 
+    public long dangerTicksRemaining(long gameTime) {
+        return dangerPos == null ? 0L : Math.max(0L, dangerUntil - gameTime);
+    }
+
     public void addTrust(UUID playerId, double amount, long untilTick) {
         TrustEntry current = trustedPlayers.get(playerId);
         double score = current == null ? 0.0 : current.score;
@@ -44,6 +48,16 @@ public final class AnimalMemory {
         TrustEntry entry = trustedPlayers.get(playerId);
         if (entry == null || gameTime > entry.untilTick) return 0.0;
         return entry.score;
+    }
+
+    public int activeTrustCount(long gameTime) {
+        int count = 0;
+        for (TrustEntry entry : trustedPlayers.values()) {
+            if (gameTime <= entry.untilTick && entry.score > 0.0) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public void tick(long gameTime) {

@@ -3,6 +3,7 @@ package com.wildsense;
 import com.wildsense.ai.PassiveGoalInjector;
 import com.wildsense.ai.PassiveEventDirector;
 import com.wildsense.config.WildsenseConfig;
+import com.wildsense.command.WildsenseCommand;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ public final class WildsenseMod implements ModInitializer {
     @Override
     public void onInitialize() {
         WildsenseConfig.load(FabricLoader.getInstance().getConfigDir().resolve("wildsense.properties"));
+        WildsenseCommand.register();
         PassiveEventDirector.register();
         PassiveGoalInjector.register();
         LOGGER.info("Wildsense initialized.");
