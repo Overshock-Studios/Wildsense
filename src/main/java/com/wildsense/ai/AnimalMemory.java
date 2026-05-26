@@ -26,6 +26,8 @@ public final class AnimalMemory {
     private long nextDangerSpreadAt;
     private long guardUntil;
     private BlockPos homePos;
+    private BlockPos sharedShelter;
+    private long sharedShelterUntil;
     private final Map<UUID, TrustEntry> trustedPlayers = new HashMap<>();
 
     public void rememberDanger(Vec3 pos, long untilTick) {
@@ -39,6 +41,15 @@ public final class AnimalMemory {
 
     public BlockPos home() {
         return homePos;
+    }
+
+    public void setSharedShelter(BlockPos pos, long untilTick) {
+        this.sharedShelter = pos == null ? null : pos.immutable();
+        this.sharedShelterUntil = untilTick;
+    }
+
+    public BlockPos sharedShelter(long gameTime) {
+        return gameTime <= sharedShelterUntil ? sharedShelter : null;
     }
 
     public void markGuarding(long untilTick) {

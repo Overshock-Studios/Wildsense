@@ -1,6 +1,8 @@
 package com.wildsense.ai.goal;
 
 import com.wildsense.ai.AiLod;
+import com.wildsense.ai.AnimalMemoryStore;
+import com.wildsense.ai.HerdCoordinator;
 import com.wildsense.ai.WildsenseAnimalRules;
 import com.wildsense.compat.WildsenseTags;
 import com.wildsense.config.WildsenseConfig;
@@ -31,8 +33,24 @@ public final class HabitatShelterGoal extends Goal implements WildsenseGoal {
         int cooldown = thundering ? 20 : 80;
         nextScanTick = animal.tickCount + cooldown + animal.getRandom().nextInt(cooldown);
         if (!level.isRaining() && level.isBrightOutside()) return false;
+
+        long now = level.getGameTime();
+        Animal leader = HerdCoordinator.leaderFor(animal);
+        if (leader != null && leader != animal) {
+            BlockPos shared = AnimalMemoryStore.get(leader).sharedShelter(now);
+            if (shared != null && animal.blockPosition().distSqr(shared) > 6.0) {
+                shelter = shared;
+                return true;
+            }
+        }
         shelter = findShelter(level, animal.blockPosition());
-        return shelter != null && animal.blockPosition().distSqr(shelter) > 6.0;
+        if (shelter != null && animal.blockPosition().distSqr(shelter) > 6.0) {
+            if (leader == animal) {
+                AnimalMemoryStore.get(animal).setSharedShelter(shelter, now + 200);
+            }
+            return true;
+        }
+        return false;
     }
 
     @Override
