@@ -109,6 +109,8 @@ public final class AnimalMemory {
             danger.putDouble(Z, dangerPos.z);
             danger.putLong(UNTIL, dangerUntil);
         }
+        if (guardUntil > 0) output.putLong("GuardUntil", guardUntil);
+        if (nextDangerSpreadAt > 0) output.putLong("NextSpread", nextDangerSpreadAt);
         if (homePos != null) {
             ValueOutput home = output.child(HOME);
             home.putInt(X, homePos.getX());
@@ -130,6 +132,8 @@ public final class AnimalMemory {
         dangerPos = null;
         dangerUntil = 0L;
         homePos = null;
+        guardUntil = input.getLongOr("GuardUntil", 0L);
+        nextDangerSpreadAt = input.getLongOr("NextSpread", 0L);
         trustedPlayers.clear();
 
         ValueInput home = input.childOrEmpty(HOME);
