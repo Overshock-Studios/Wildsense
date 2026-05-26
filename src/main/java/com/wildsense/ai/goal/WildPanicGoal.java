@@ -156,14 +156,20 @@ public final class WildPanicGoal extends Goal implements WildsenseGoal {
         if (level.canSeeSky(pos) && level.isRaining()) score -= 8.0;
         if (level.getBlockState(pos.below()).is(WildsenseTags.GRAZING_BLOCKS)) score += 3.0;
         int waterNeighbors = 0;
+        int blockedNeighbors = 0;
         for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.Plane.HORIZONTAL) {
             BlockPos n = pos.relative(dir);
             if (!level.getBlockState(n).getFluidState().isEmpty()
                     || !level.getBlockState(n.below()).getFluidState().isEmpty()) {
                 waterNeighbors++;
             }
+            BlockState head = level.getBlockState(n.above());
+            BlockState feet = level.getBlockState(n);
+            if (!head.isAir() && !feet.isAir()) blockedNeighbors++;
         }
         score -= waterNeighbors * 25.0;
+        if (blockedNeighbors >= 3) score -= 30.0;
+        else if (blockedNeighbors == 2) score -= 8.0;
         return score;
     }
 
