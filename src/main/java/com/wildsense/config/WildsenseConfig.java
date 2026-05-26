@@ -69,6 +69,7 @@ public final class WildsenseConfig {
     public static double stampedeKnockback = 0.35;
     public static double stampedeHerdScaling = 0.08;
     public static double trustPerFeeding = 0.22;
+    public static double trustLossPerHit = 0.5;
     public static double herdTrustShareMultiplier = 0.35;
     public static double trustedPlayerFleeReduction = 0.65;
 
@@ -229,6 +230,7 @@ public final class WildsenseConfig {
         stampedeKnockback = decimal(properties, "stampedeKnockback", stampedeKnockback);
         stampedeHerdScaling = decimal(properties, "stampedeHerdScaling", stampedeHerdScaling);
         trustPerFeeding = decimal(properties, "trustPerFeeding", trustPerFeeding);
+        trustLossPerHit = decimal(properties, "trustLossPerHit", trustLossPerHit);
         herdTrustShareMultiplier = decimal(properties, "herdTrustShareMultiplier", herdTrustShareMultiplier);
         trustedPlayerFleeReduction = decimal(properties, "trustedPlayerFleeReduction", trustedPlayerFleeReduction);
     }
@@ -292,6 +294,7 @@ public final class WildsenseConfig {
         properties.setProperty("stampedeKnockback", Double.toString(stampedeKnockback));
         properties.setProperty("stampedeHerdScaling", Double.toString(stampedeHerdScaling));
         properties.setProperty("trustPerFeeding", Double.toString(trustPerFeeding));
+        properties.setProperty("trustLossPerHit", Double.toString(trustLossPerHit));
         properties.setProperty("herdTrustShareMultiplier", Double.toString(herdTrustShareMultiplier));
         properties.setProperty("trustedPlayerFleeReduction", Double.toString(trustedPlayerFleeReduction));
         return properties;

@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.Block;
 public final class WildsenseTags {
     public static final TagKey<EntityType<?>> HERDABLE = entity("herdable");
     public static final TagKey<EntityType<?>> PREDATORS = entity("predators");
+    public static final TagKey<EntityType<?>> DISABLED = entity("disabled");
     public static final TagKey<Block> GRAZING_BLOCKS = block("grazing_blocks");
     public static final TagKey<Block> SHELTER_BLOCKS = block("shelter_blocks");
     public static final TagKey<Block> AVOID_BLOCKS = block("avoid_blocks");

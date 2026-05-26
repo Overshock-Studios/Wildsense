@@ -7,6 +7,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -23,6 +24,10 @@ public final class PassiveEventDirector {
         if (!WildsenseConfig.enabled || damageTaken <= 0.0f || !(entity instanceof Animal animal)) return;
         Vec3 danger = dangerPosition(animal, source);
         DangerBroadcaster.rememberAndSpread(animal, danger);
+        Entity attacker = source.getEntity();
+        if (attacker instanceof Player player && WildsenseConfig.trustEnabled) {
+            AnimalMemoryStore.get(animal).removeTrust(player.getUUID(), WildsenseConfig.trustLossPerHit);
+        }
         if (animal.isBaby() && WildsenseConfig.parentGuardEnabled
                 && animal.level() instanceof ServerLevel level) {
             long until = level.getGameTime() + WildsenseConfig.parentGuardTicks;

@@ -2,6 +2,7 @@ package com.wildsense.ai.goal;
 
 import com.wildsense.ai.AiLod;
 import com.wildsense.ai.AnimalMemoryStore;
+import com.wildsense.ai.HerdCoordinator;
 import com.wildsense.ai.WildsenseAnimalRules;
 import com.wildsense.compat.WildsenseTags;
 import com.wildsense.config.WildsenseConfig;
@@ -34,7 +35,19 @@ public final class DrinkGoal extends Goal implements WildsenseGoal {
         if (AnimalMemoryStore.get(animal).dangerPos(animal.level().getGameTime()) != null) return false;
         if (animal.isInLove() || animal.isBaby()) return false;
         if (animal.isInWater()) return false;
+        long now = animal.level().getGameTime();
+        Animal leader = HerdCoordinator.leaderFor(animal);
+        if (leader != null && leader != animal) {
+            BlockPos shared = AnimalMemoryStore.get(leader).sharedWater(now);
+            if (shared != null && animal.blockPosition().distSqr(shared) < 1024.0) {
+                waterEdge = shared;
+                return true;
+            }
+        }
         waterEdge = findWaterEdge(animal.level(), animal.blockPosition());
+        if (waterEdge != null && leader == animal) {
+            AnimalMemoryStore.get(animal).setSharedWater(waterEdge, now + 200);
+        }
         return waterEdge != null;
     }
 

@@ -1,6 +1,7 @@
 package com.wildsense.ai.goal;
 
 import com.wildsense.ai.AiLod;
+import com.wildsense.ai.AnimalMemoryStore;
 import com.wildsense.ai.HerdCoordinator;
 import com.wildsense.ai.ThreatScanner;
 import com.wildsense.ai.WildsenseAnimalRules;
@@ -44,6 +45,13 @@ public final class BabyAnchorGoal extends Goal implements WildsenseGoal {
     @Override
     public void start() {
         baby.getNavigation().moveTo(adult, WildsenseConfig.babyAnchorSpeed);
+        if (adult != null) {
+            var babyMem = AnimalMemoryStore.get(baby);
+            if (babyMem.home() == null) {
+                var adultHome = AnimalMemoryStore.get(adult).home();
+                if (adultHome != null) babyMem.setHome(adultHome);
+            }
+        }
     }
 
     @Override

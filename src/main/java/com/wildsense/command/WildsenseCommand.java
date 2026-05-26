@@ -45,6 +45,8 @@ public final class WildsenseCommand {
                                         .executes(WildsenseCommand::clearHome)))
                         .then(Commands.literal("forget")
                                 .executes(WildsenseCommand::forgetNearest))
+                        .then(Commands.literal("trust")
+                                .executes(WildsenseCommand::reportTrust))
                         .then(Commands.literal("profile")
                                 .then(Commands.argument("name", com.mojang.brigadier.arguments.StringArgumentType.word())
                                         .suggests((c, b) -> {
@@ -110,6 +112,30 @@ public final class WildsenseCommand {
                 "  home=%s guarding=%s",
                 home == null ? "none" : home.getX() + " " + home.getY() + " " + home.getZ(),
                 guarding)), false);
+        return 1;
+    }
+
+    private static int reportTrust(com.mojang.brigadier.context.CommandContext<CommandSourceStack> ctx) {
+        CommandSourceStack source = ctx.getSource();
+        ServerPlayer player = source.getPlayer();
+        if (player == null) {
+            source.sendFailure(Component.literal("[Wildsense] Trust command requires a player."));
+            return 0;
+        }
+        ServerLevel level = source.getLevel();
+        AABB box = AABB.ofSize(source.getPosition(), ANIMAL_SCAN_SIZE, ANIMAL_SCAN_SIZE, ANIMAL_SCAN_SIZE);
+        Animal animal = level.getEntitiesOfClass(Animal.class, box).stream()
+                .min(Comparator.comparingDouble(c -> c.distanceToSqr(source.getPosition())))
+                .orElse(null);
+        if (animal == null) {
+            source.sendFailure(Component.literal("[Wildsense] No animal nearby."));
+            return 0;
+        }
+        long now = level.getGameTime();
+        double trust = AnimalMemoryStore.get(animal).trustScore(player.getUUID(), now);
+        source.sendSuccess(() -> Component.literal(String.format(
+                "[Wildsense] %s#%d trusts %s = %.2f",
+                animal.getType().toShortString(), animal.getId(), player.getName().getString(), trust)), false);
         return 1;
     }
 
