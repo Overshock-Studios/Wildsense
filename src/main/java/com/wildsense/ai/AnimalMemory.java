@@ -22,11 +22,20 @@ public final class AnimalMemory {
     private Vec3 dangerPos;
     private long dangerUntil;
     private long nextDangerSpreadAt;
+    private long guardUntil;
     private final Map<UUID, TrustEntry> trustedPlayers = new HashMap<>();
 
     public void rememberDanger(Vec3 pos, long untilTick) {
         this.dangerPos = pos;
         this.dangerUntil = untilTick;
+    }
+
+    public void markGuarding(long untilTick) {
+        if (untilTick > guardUntil) guardUntil = untilTick;
+    }
+
+    public boolean isGuarding(long gameTime) {
+        return gameTime <= guardUntil;
     }
 
     public boolean canSpreadDanger(long gameTime, int cooldownTicks) {

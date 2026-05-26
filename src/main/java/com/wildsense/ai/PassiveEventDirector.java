@@ -5,7 +5,9 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public final class PassiveEventDirector {
@@ -21,6 +23,15 @@ public final class PassiveEventDirector {
         if (!WildsenseConfig.enabled || damageTaken <= 0.0f || !(entity instanceof Animal animal)) return;
         Vec3 danger = dangerPosition(animal, source);
         DangerBroadcaster.rememberAndSpread(animal, danger);
+        if (animal.isBaby() && WildsenseConfig.parentGuardEnabled
+                && animal.level() instanceof ServerLevel level) {
+            long until = level.getGameTime() + WildsenseConfig.parentGuardTicks;
+            AABB box = animal.getBoundingBox().inflate(WildsenseConfig.parentGuardRadius);
+            for (Animal adult : level.getEntitiesOfClass(Animal.class, box,
+                    other -> other.isAlive() && !other.isBaby() && other.getType() == animal.getType())) {
+                AnimalMemoryStore.get(adult).markGuarding(until);
+            }
+        }
     }
 
     private static Vec3 dangerPosition(Animal animal, DamageSource source) {

@@ -52,24 +52,49 @@ public final class WildPanicGoal extends Goal implements WildsenseGoal {
 
     @Override
     public void start() {
-        moveAway();
+        act();
     }
 
     @Override
     public void tick() {
         if (animal.tickCount % 12 == 0) {
-            moveAway();
+            act();
         }
         if (WildsenseConfig.stampedeEnabled && HerdCoordinator.herdSize(animal) >= WildsenseConfig.minStampedeHerdSize) {
             applyStampedeBump();
         }
     }
 
-    private void moveAway() {
+    private void act() {
         if (danger == null) return;
+        long now = animal.level().getGameTime();
+        if (WildsenseConfig.parentGuardEnabled
+                && !animal.isBaby()
+                && AnimalMemoryStore.get(animal).isGuarding(now)) {
+            Animal baby = nearestSameTypeBaby();
+            if (baby != null) {
+                animal.getNavigation().moveTo(baby, WildsenseConfig.panicSpeed);
+                return;
+            }
+        }
         BlockPos escape = chooseEscapePos();
         if (escape == null) return;
         animal.getNavigation().moveTo(escape.getX() + 0.5, escape.getY(), escape.getZ() + 0.5, WildsenseConfig.panicSpeed);
+    }
+
+    private Animal nearestSameTypeBaby() {
+        AABB box = animal.getBoundingBox().inflate(WildsenseConfig.parentGuardRadius);
+        Animal best = null;
+        double bestDist = Double.MAX_VALUE;
+        for (Animal other : animal.level().getEntitiesOfClass(Animal.class, box,
+                o -> o != animal && o.isAlive() && o.isBaby() && o.getType() == animal.getType())) {
+            double d = other.distanceToSqr(animal);
+            if (d < bestDist) {
+                bestDist = d;
+                best = other;
+            }
+        }
+        return best;
     }
 
     private BlockPos chooseEscapePos() {

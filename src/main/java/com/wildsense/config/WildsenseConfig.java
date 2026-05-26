@@ -48,6 +48,9 @@ public final class WildsenseConfig {
     public static int drinkSearchRadius = 8;
     public static int drinkMinIntervalTicks = 20 * 60;
     public static int drinkDurationTicks = 20 * 3;
+    public static int parentGuardTicks = 20 * 8;
+    public static int parentGuardRadius = 12;
+    public static boolean parentGuardEnabled = true;
 
     public static double panicSpeed = 1.35;
     public static double herdFollowSpeed = 1.05;
@@ -195,6 +198,9 @@ public final class WildsenseConfig {
         drinkSearchRadius = integer(properties, "drinkSearchRadius", drinkSearchRadius);
         drinkMinIntervalTicks = integer(properties, "drinkMinIntervalTicks", drinkMinIntervalTicks);
         drinkDurationTicks = integer(properties, "drinkDurationTicks", drinkDurationTicks);
+        parentGuardTicks = integer(properties, "parentGuardTicks", parentGuardTicks);
+        parentGuardRadius = integer(properties, "parentGuardRadius", parentGuardRadius);
+        parentGuardEnabled = bool(properties, "parentGuardEnabled", parentGuardEnabled);
 
         panicSpeed = decimal(properties, "panicSpeed", panicSpeed);
         herdFollowSpeed = decimal(properties, "herdFollowSpeed", herdFollowSpeed);
@@ -246,6 +252,9 @@ public final class WildsenseConfig {
         properties.setProperty("drinkSearchRadius", Integer.toString(drinkSearchRadius));
         properties.setProperty("drinkMinIntervalTicks", Integer.toString(drinkMinIntervalTicks));
         properties.setProperty("drinkDurationTicks", Integer.toString(drinkDurationTicks));
+        properties.setProperty("parentGuardTicks", Integer.toString(parentGuardTicks));
+        properties.setProperty("parentGuardRadius", Integer.toString(parentGuardRadius));
+        properties.setProperty("parentGuardEnabled", Boolean.toString(parentGuardEnabled));
         properties.setProperty("panicSpeed", Double.toString(panicSpeed));
         properties.setProperty("herdFollowSpeed", Double.toString(herdFollowSpeed));
         properties.setProperty("babyAnchorSpeed", Double.toString(babyAnchorSpeed));
