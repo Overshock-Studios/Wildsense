@@ -45,7 +45,7 @@ public final class DrinkGoal extends Goal implements TamekindGoal {
             }
         }
         waterEdge = findWaterEdge(animal.level(), animal.blockPosition());
-        if (waterEdge != null && leader == animal) {
+        if (waterEdge != null && leader == animal && !animal.isVehicle()) {
             AnimalMemoryStore.get(animal).setSharedWater(waterEdge, now + 200);
         }
         return waterEdge != null;

@@ -51,7 +51,7 @@ public final class HabitatShelterGoal extends Goal implements TamekindGoal {
         }
         shelter = findShelter(level, animal.blockPosition());
         if (shelter != null && animal.blockPosition().distSqr(shelter) > 6.0) {
-            if (leader == animal) {
+            if (leader == animal && !animal.isVehicle()) {
                 AnimalMemoryStore.get(animal).setSharedShelter(shelter, now + 200);
             }
             return true;

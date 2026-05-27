@@ -76,6 +76,10 @@ public final class TamekindConfig {
     public static double trustHitForgivenessThreshold = 0.6;
     public static double lowHpThresholdFraction = 0.3;
     public static double limpSpeedMultiplier = 0.6;
+    public static boolean followTrustedEnabled = true;
+    public static int followTrustedRadius = 24;
+    public static double followTrustedMinTrust = 0.5;
+    public static double followTrustedSpeed = 1.0;
     public static double herdTrustShareMultiplier = 0.35;
     public static double trustedPlayerFleeReduction = 0.65;
 
@@ -243,6 +247,10 @@ public final class TamekindConfig {
         trustHitForgivenessThreshold = decimal(properties, "trustHitForgivenessThreshold", trustHitForgivenessThreshold);
         lowHpThresholdFraction = decimal(properties, "lowHpThresholdFraction", lowHpThresholdFraction);
         limpSpeedMultiplier = decimal(properties, "limpSpeedMultiplier", limpSpeedMultiplier);
+        followTrustedEnabled = bool(properties, "followTrustedEnabled", followTrustedEnabled);
+        followTrustedRadius = integer(properties, "followTrustedRadius", followTrustedRadius);
+        followTrustedMinTrust = decimal(properties, "followTrustedMinTrust", followTrustedMinTrust);
+        followTrustedSpeed = decimal(properties, "followTrustedSpeed", followTrustedSpeed);
         herdTrustShareMultiplier = decimal(properties, "herdTrustShareMultiplier", herdTrustShareMultiplier);
         trustedPlayerFleeReduction = decimal(properties, "trustedPlayerFleeReduction", trustedPlayerFleeReduction);
     }
@@ -312,6 +320,10 @@ public final class TamekindConfig {
         properties.setProperty("trustHitForgivenessThreshold", Double.toString(trustHitForgivenessThreshold));
         properties.setProperty("lowHpThresholdFraction", Double.toString(lowHpThresholdFraction));
         properties.setProperty("limpSpeedMultiplier", Double.toString(limpSpeedMultiplier));
+        properties.setProperty("followTrustedEnabled", Boolean.toString(followTrustedEnabled));
+        properties.setProperty("followTrustedRadius", Integer.toString(followTrustedRadius));
+        properties.setProperty("followTrustedMinTrust", Double.toString(followTrustedMinTrust));
+        properties.setProperty("followTrustedSpeed", Double.toString(followTrustedSpeed));
         properties.setProperty("herdTrustShareMultiplier", Double.toString(herdTrustShareMultiplier));
         properties.setProperty("trustedPlayerFleeReduction", Double.toString(trustedPlayerFleeReduction));
         return properties;

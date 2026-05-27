@@ -44,7 +44,7 @@ public final class GrazeRestGoal extends Goal implements TamekindGoal {
             }
         }
         grazingSpot = findGrazingSpot(animal.level(), animal.blockPosition());
-        if (grazingSpot != null && leader == animal) {
+        if (grazingSpot != null && leader == animal && !animal.isVehicle()) {
             AnimalMemoryStore.get(animal).setSharedGraze(grazingSpot, now + 200);
         }
         return grazingSpot != null;
@@ -74,6 +74,16 @@ public final class GrazeRestGoal extends Goal implements TamekindGoal {
         if (!animal.getNavigation().isDone()) return;
         grazeTicks--;
         animal.getLookControl().setLookAt(grazingSpot.getX() + 0.5, grazingSpot.getY() - 0.2, grazingSpot.getZ() + 0.5);
+        if (animal.level() instanceof net.minecraft.server.level.ServerLevel server
+                && animal.getRandom().nextInt(400) == 0) {
+            net.minecraft.core.BlockPos below = grazingSpot.below();
+            var state = server.getBlockState(below);
+            if (state.is(net.minecraft.world.level.block.Blocks.GRASS_BLOCK)) {
+                server.levelEvent(2001, below,
+                        net.minecraft.core.registries.BuiltInRegistries.BLOCK.getId(state.getBlock()));
+                server.setBlock(below, net.minecraft.world.level.block.Blocks.DIRT.defaultBlockState(), 2);
+            }
+        }
     }
 
     @Override

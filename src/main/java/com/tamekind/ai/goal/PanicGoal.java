@@ -43,6 +43,12 @@ public final class PanicGoal extends Goal implements TamekindGoal {
             DangerBroadcaster.rememberAndSpread(animal, danger);
             return true;
         }
+        Vec3 hazard = com.tamekind.ai.EnvironmentSensor.nearbyHazard(animal, 3);
+        if (hazard != null) {
+            danger = hazard;
+            DangerBroadcaster.rememberAndSpread(animal, danger);
+            return true;
+        }
         danger = memory.dangerPos(animal.level().getGameTime());
         return danger != null && animal.distanceToSqr(danger) < panicRadius * panicRadius * 2.0;
     }
