@@ -5,6 +5,7 @@ import com.tamekind.ai.goal.BabyAnchorGoal;
 import com.tamekind.ai.goal.DrinkGoal;
 import com.tamekind.ai.goal.GrazeRestGoal;
 import com.tamekind.ai.goal.HomeReturnGoal;
+import com.tamekind.ai.goal.MotherBondGoal;
 import com.tamekind.ai.goal.HabitatShelterGoal;
 import com.tamekind.ai.goal.HerdFollowGoal;
 import com.tamekind.ai.goal.PanicGoal;
@@ -80,6 +81,7 @@ public final class PassiveGoalInjector {
         accessor.tamekind$goalSelector().addGoal(8, new GrazeRestGoal(animal));
         accessor.tamekind$goalSelector().addGoal(9, new DrinkGoal(animal));
         accessor.tamekind$goalSelector().addGoal(10, new HomeReturnGoal(animal));
+        accessor.tamekind$goalSelector().addGoal(11, new MotherBondGoal(animal));
     }
 
     private static boolean hasTamekindGoal(Animal animal) {

@@ -88,6 +88,13 @@ public final class GrazeRestGoal extends Goal implements TamekindGoal {
     private BlockPos findGrazingSpot(Level level, BlockPos origin) {
         if (isRestStandPos(level, origin)) return origin;
         boolean night = !level.isBrightOutside();
+        double cx = 0, cz = 0;
+        int herdN = 0;
+        if (night) {
+            for (Animal h : HerdCoordinator.nearbyHerd(animal)) { cx += h.getX(); cz += h.getZ(); herdN++; }
+        }
+        boolean cluster = night && herdN > 0;
+        if (cluster) { cx /= herdN; cz /= herdN; }
         BlockPos best = null;
         long bestDist = Long.MAX_VALUE;
         int radius = TamekindConfig.grazeSearchRadius;
@@ -100,6 +107,11 @@ public final class GrazeRestGoal extends Goal implements TamekindGoal {
                     long dist = (long) dx * dx + (long) dz * dz + (long) dy * dy * 3L;
                     if (level.getBlockState(cursor).is(TamekindTags.SOFT_AVOID_BLOCKS)) dist += 12;
                     if (night && level.getBlockState(cursor.below()).is(TamekindTags.COMFORT_BLOCKS)) dist -= 10;
+                    if (cluster) {
+                        double ddx = cursor.getX() + 0.5 - cx;
+                        double ddz = cursor.getZ() + 0.5 - cz;
+                        dist += (long) (ddx * ddx + ddz * ddz) / 2;
+                    }
                     if (dist < bestDist) {
                         bestDist = dist;
                         best = cursor.immutable();

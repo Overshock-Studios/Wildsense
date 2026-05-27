@@ -32,7 +32,8 @@ public final class HabitatShelterGoal extends Goal implements TamekindGoal {
         boolean thundering = level.isThundering();
         int cooldown = thundering ? 20 : 80;
         nextScanTick = animal.tickCount + cooldown + animal.getRandom().nextInt(cooldown);
-        if (!level.isRaining() && level.isBrightOutside()) return false;
+        boolean injured = animal.getHealth() < animal.getMaxHealth() * TamekindConfig.lowHpThresholdFraction;
+        if (!injured && !level.isRaining() && level.isBrightOutside()) return false;
 
         long now = level.getGameTime();
         Animal leader = HerdCoordinator.leaderFor(animal);

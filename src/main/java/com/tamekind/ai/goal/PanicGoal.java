@@ -84,6 +84,9 @@ public final class PanicGoal extends Goal implements TamekindGoal {
         if (escape == null) return;
         double speed = TamekindConfig.panicSpeed;
         if (animal.isBaby()) speed *= TamekindConfig.babyPanicSpeedMultiplier;
+        if (animal.getHealth() < animal.getMaxHealth() * TamekindConfig.lowHpThresholdFraction) {
+            speed *= TamekindConfig.limpSpeedMultiplier;
+        }
         animal.getNavigation().moveTo(escape.getX() + 0.5, escape.getY(), escape.getZ() + 0.5, speed);
     }
 

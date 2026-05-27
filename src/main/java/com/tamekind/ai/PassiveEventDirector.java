@@ -23,11 +23,16 @@ public final class PassiveEventDirector {
                                     float baseDamageTaken, float damageTaken, boolean blocked) {
         if (!TamekindConfig.enabled || !(entity instanceof Animal animal)) return;
         if (damageTaken <= 0.0f && !source.is(net.minecraft.tags.DamageTypeTags.IS_EXPLOSION)) return;
-        Vec3 danger = dangerPosition(animal, source);
-        DangerBroadcaster.rememberAndSpread(animal, danger);
         Entity attacker = source.getEntity();
+        boolean forgive = false;
         if (attacker instanceof Player player && TamekindConfig.trustEnabled) {
+            double trust = AnimalMemoryStore.get(animal).trustScore(player.getUUID(), animal.level().getGameTime());
+            if (trust >= TamekindConfig.trustHitForgivenessThreshold) forgive = true;
             AnimalMemoryStore.get(animal).removeTrust(player.getUUID(), TamekindConfig.trustLossPerHit);
+        }
+        if (!forgive) {
+            Vec3 danger = dangerPosition(animal, source);
+            DangerBroadcaster.rememberAndSpread(animal, danger);
         }
         if (animal.isBaby() && TamekindConfig.parentGuardEnabled
                 && animal.level() instanceof ServerLevel level) {
