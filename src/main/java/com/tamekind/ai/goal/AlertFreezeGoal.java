@@ -3,7 +3,9 @@ package com.tamekind.ai.goal;
 import com.tamekind.ai.AiLod;
 import com.tamekind.ai.ThreatScanner;
 import com.tamekind.ai.TamekindAnimalRules;
+import com.tamekind.compat.TamekindTags;
 import com.tamekind.config.TamekindConfig;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -43,6 +45,8 @@ public final class AlertFreezeGoal extends Goal implements TamekindGoal {
         int rnd = Math.max(1, TamekindConfig.alertFreezeRandomTicks);
         int min = TamekindConfig.alertFreezeMinTicks;
         if (animal.isBaby()) { min = Math.max(5, min / 2); rnd = Math.max(1, rnd / 2); }
+        boolean freezer = BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(animal.getType()).is(TamekindTags.FREEZERS);
+        if (freezer) { min *= 3; rnd *= 2; }
         alertTicks = min + animal.getRandom().nextInt(rnd);
         initialTicks = alertTicks;
         animal.getNavigation().stop();
@@ -54,7 +58,8 @@ public final class AlertFreezeGoal extends Goal implements TamekindGoal {
         if (threat != null) {
             animal.getLookControl().setLookAt(threat, 30.0F, 30.0F);
         }
-        if (threat != null && alertTicks < initialTicks / 2 && animal.getNavigation().isDone()) {
+        boolean freezer = BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(animal.getType()).is(TamekindTags.FREEZERS);
+        if (!freezer && threat != null && alertTicks < initialTicks / 2 && animal.getNavigation().isDone()) {
             net.minecraft.world.phys.Vec3 away = animal.position().subtract(threat.position());
             if (away.lengthSqr() > 0.001) {
                 away = away.normalize().scale(6.0);

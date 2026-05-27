@@ -47,6 +47,8 @@ public final class TamekindCommand {
                                         .executes(TamekindCommand::setHome)))
                         .then(Commands.literal("forget")
                                 .executes(TamekindCommand::forgetNearest))
+                        .then(Commands.literal("dump")
+                                .executes(TamekindCommand::dumpNearest))
                         .then(Commands.literal("trust")
                                 .executes(TamekindCommand::reportTrust))
                         .then(Commands.literal("disable")
@@ -162,6 +164,38 @@ public final class TamekindCommand {
         source.sendSuccess(() -> Component.literal(String.format(
                 "[Tamekind] %s#%d trusts %s = %.2f",
                 animal.getType().toShortString(), animal.getId(), player.getName().getString(), trust)), false);
+        return 1;
+    }
+
+    private static int dumpNearest(com.mojang.brigadier.context.CommandContext<CommandSourceStack> ctx) {
+        CommandSourceStack source = ctx.getSource();
+        ServerLevel level = source.getLevel();
+        AABB box = AABB.ofSize(source.getPosition(), ANIMAL_SCAN_SIZE, ANIMAL_SCAN_SIZE, ANIMAL_SCAN_SIZE);
+        Animal animal = level.getEntitiesOfClass(Animal.class, box).stream()
+                .min(Comparator.comparingDouble(c -> c.distanceToSqr(source.getPosition())))
+                .orElse(null);
+        if (animal == null) {
+            source.sendFailure(Component.literal("[Tamekind] No animal nearby."));
+            return 0;
+        }
+        long now = level.getGameTime();
+        AnimalMemory m = AnimalMemoryStore.get(animal);
+        StringBuilder sb = new StringBuilder();
+        sb.append(animal.getType().toShortString()).append('#').append(animal.getId());
+        sb.append("\n  lod=").append(AiLod.computeFresh(animal));
+        sb.append(" baby=").append(animal.isBaby());
+        sb.append(" herdable=").append(HerdCoordinator.isHerdable(animal));
+        sb.append(" herdSize=").append(HerdCoordinator.herdSize(animal));
+        sb.append("\n  danger=").append(m.dangerPos(now)).append(" remaining=").append(m.dangerTicksRemaining(now));
+        sb.append("\n  guarding=").append(m.isGuarding(now));
+        sb.append("\n  home=").append(m.home());
+        sb.append("\n  sharedShelter=").append(m.sharedShelter(now));
+        sb.append("\n  sharedGraze=").append(m.sharedGraze(now));
+        sb.append("\n  sharedWater=").append(m.sharedWater(now));
+        sb.append("\n  trustedPlayers=").append(m.activeTrustCount(now));
+        Animal leader = HerdCoordinator.leaderFor(animal);
+        sb.append("\n  leader=").append(formatAnimal(leader));
+        source.sendSuccess(() -> Component.literal("[Tamekind] " + sb), false);
         return 1;
     }
 

@@ -160,6 +160,8 @@ public final class PanicGoal extends Goal implements TamekindGoal {
         Level level = animal.level();
         if (level.canSeeSky(pos) && level.isRaining()) score -= 8.0;
         if (level.getBlockState(pos.below()).is(TamekindTags.GRAZING_BLOCKS)) score += 3.0;
+        if (level.getBlockState(pos.below()).is(TamekindTags.SOFT_AVOID_BLOCKS)
+                || level.getBlockState(pos).is(TamekindTags.SOFT_AVOID_BLOCKS)) score -= 6.0;
         if (!level.isBrightOutside()) {
             score += level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK, pos) * 2.0;
         }

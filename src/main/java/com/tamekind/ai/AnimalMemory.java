@@ -133,7 +133,10 @@ public final class AnimalMemory {
     public double trustScore(UUID playerId, long gameTime) {
         TrustEntry entry = trustedPlayers.get(playerId);
         if (entry == null || gameTime > entry.untilTick) return 0.0;
-        return entry.score;
+        long ticksLeft = entry.untilTick - gameTime;
+        int half = Math.max(1, com.tamekind.config.TamekindConfig.trustTicks / 2);
+        if (ticksLeft >= half) return entry.score;
+        return entry.score * ((double) ticksLeft / half);
     }
 
     public int activeTrustCount(long gameTime) {
