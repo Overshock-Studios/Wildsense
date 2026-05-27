@@ -90,11 +90,11 @@ public final class HabitatShelterGoal extends Goal implements TamekindGoal {
                     if (level.getBlockState(cursor.below()).isAir()) continue;
                     if (level.getBlockState(cursor.below()).is(TamekindTags.AVOID_BLOCKS)) continue;
                     boolean covered = !level.canSeeSky(cursor);
-                    boolean taggedShelter = level.getBlockState(cursor.above()).is(TamekindTags.SHELTER_BLOCKS)
-                            || level.getBlockState(cursor.below()).is(TamekindTags.GRAZING_BLOCKS);
+                    boolean taggedShelter = level.getBlockState(cursor.above()).is(TamekindTags.SHELTER_BLOCKS);
                     if (!covered && !taggedShelter) continue;
                     long score = (long) dx * dx + (long) dz * dz + (long) dy * dy * 3L;
                     if (taggedShelter) score -= 8;
+                    if (level.getBlockState(cursor.below()).is(TamekindTags.GRAZING_BLOCKS)) score -= 2;
                     if (level.getBlockState(cursor.below()).is(TamekindTags.COMFORT_BLOCKS)) score -= 6;
                     if (level.getBlockState(cursor.below()).is(TamekindTags.SOFT_AVOID_BLOCKS)
                             || level.getBlockState(cursor).is(TamekindTags.SOFT_AVOID_BLOCKS)) score += 10;
