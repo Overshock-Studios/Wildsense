@@ -60,6 +60,11 @@ public final class PanicGoal extends Goal implements TamekindGoal {
 
     @Override
     public void start() {
+        if (TamekindConfig.panicSoundEnabled) {
+            animal.playSound(net.minecraft.sounds.SoundEvents.GENERIC_HURT,
+                    TamekindConfig.panicSoundVolume,
+                    0.9f + animal.getRandom().nextFloat() * 0.2f);
+        }
         act();
     }
 
@@ -209,6 +214,17 @@ public final class PanicGoal extends Goal implements TamekindGoal {
             if (entity.isPassenger() || entity.isVehicle()) continue;
             if (entity instanceof Animal other && (other.isBaby() || TamekindAnimalRules.skipMovementGoals(other))) continue;
             entity.push(push.x, 0.08 * scale, push.z);
+        }
+        if (TamekindConfig.stampedeCropDamageEnabled
+                && animal.level() instanceof net.minecraft.server.level.ServerLevel server
+                && animal.getRandom().nextDouble() < TamekindConfig.stampedeCropDamageChance) {
+            BlockPos foot = animal.blockPosition();
+            var state = server.getBlockState(foot);
+            if (state.is(TamekindTags.SOFT_AVOID_BLOCKS)
+                    && !state.is(net.minecraft.world.level.block.Blocks.SNOW)
+                    && !state.is(net.minecraft.world.level.block.Blocks.FARMLAND)) {
+                server.destroyBlock(foot, true, animal);
+            }
         }
     }
 }

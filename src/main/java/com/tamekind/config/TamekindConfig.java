@@ -80,6 +80,13 @@ public final class TamekindConfig {
     public static int followTrustedRadius = 24;
     public static double followTrustedMinTrust = 0.5;
     public static double followTrustedSpeed = 1.0;
+    public static boolean stampedeCropDamageEnabled = false;
+    public static double stampedeCropDamageChance = 0.05;
+    public static boolean panicSoundEnabled = true;
+    public static float panicSoundVolume = 0.4f;
+    public static int idleBondTickInterval = 20 * 30;
+    public static double idleBondTrustGain = 0.01;
+    public static int idleBondRadius = 8;
     public static double herdTrustShareMultiplier = 0.35;
     public static double trustedPlayerFleeReduction = 0.65;
 
@@ -251,6 +258,13 @@ public final class TamekindConfig {
         followTrustedRadius = integer(properties, "followTrustedRadius", followTrustedRadius);
         followTrustedMinTrust = decimal(properties, "followTrustedMinTrust", followTrustedMinTrust);
         followTrustedSpeed = decimal(properties, "followTrustedSpeed", followTrustedSpeed);
+        stampedeCropDamageEnabled = bool(properties, "stampedeCropDamageEnabled", stampedeCropDamageEnabled);
+        stampedeCropDamageChance = decimal(properties, "stampedeCropDamageChance", stampedeCropDamageChance);
+        panicSoundEnabled = bool(properties, "panicSoundEnabled", panicSoundEnabled);
+        panicSoundVolume = (float) decimal(properties, "panicSoundVolume", panicSoundVolume);
+        idleBondTickInterval = integer(properties, "idleBondTickInterval", idleBondTickInterval);
+        idleBondTrustGain = decimal(properties, "idleBondTrustGain", idleBondTrustGain);
+        idleBondRadius = integer(properties, "idleBondRadius", idleBondRadius);
         herdTrustShareMultiplier = decimal(properties, "herdTrustShareMultiplier", herdTrustShareMultiplier);
         trustedPlayerFleeReduction = decimal(properties, "trustedPlayerFleeReduction", trustedPlayerFleeReduction);
     }
@@ -324,6 +338,13 @@ public final class TamekindConfig {
         properties.setProperty("followTrustedRadius", Integer.toString(followTrustedRadius));
         properties.setProperty("followTrustedMinTrust", Double.toString(followTrustedMinTrust));
         properties.setProperty("followTrustedSpeed", Double.toString(followTrustedSpeed));
+        properties.setProperty("stampedeCropDamageEnabled", Boolean.toString(stampedeCropDamageEnabled));
+        properties.setProperty("stampedeCropDamageChance", Double.toString(stampedeCropDamageChance));
+        properties.setProperty("panicSoundEnabled", Boolean.toString(panicSoundEnabled));
+        properties.setProperty("panicSoundVolume", Float.toString(panicSoundVolume));
+        properties.setProperty("idleBondTickInterval", Integer.toString(idleBondTickInterval));
+        properties.setProperty("idleBondTrustGain", Double.toString(idleBondTrustGain));
+        properties.setProperty("idleBondRadius", Integer.toString(idleBondRadius));
         properties.setProperty("herdTrustShareMultiplier", Double.toString(herdTrustShareMultiplier));
         properties.setProperty("trustedPlayerFleeReduction", Double.toString(trustedPlayerFleeReduction));
         return properties;

@@ -61,6 +61,7 @@ public final class GrazeRestGoal extends Goal implements TamekindGoal {
     public void start() {
         int base = TamekindConfig.grazeDurationTicks;
         if (!animal.level().isBrightOutside()) base *= 3;
+        if (com.tamekind.ai.BiomeComfort.isInComfortBiome(animal)) base = (int) (base * 1.5);
         grazeTicks = base + animal.getRandom().nextInt(Math.max(1, base));
         if (animal.blockPosition().distSqr(grazingSpot) > 3.0) {
             animal.getNavigation().moveTo(grazingSpot.getX() + 0.5, grazingSpot.getY(), grazingSpot.getZ() + 0.5, 0.8);
