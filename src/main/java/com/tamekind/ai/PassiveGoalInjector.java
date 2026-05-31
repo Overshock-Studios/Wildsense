@@ -10,6 +10,7 @@ import com.tamekind.ai.goal.LostBabyGoal;
 import com.tamekind.ai.goal.MotherBondGoal;
 import com.tamekind.ai.goal.MatingDisplayGoal;
 import com.tamekind.ai.goal.PetIdleBondGoal;
+import com.tamekind.ai.goal.WallowGoal;
 import com.tamekind.ai.goal.HabitatShelterGoal;
 import com.tamekind.ai.goal.HerdFollowGoal;
 import com.tamekind.ai.goal.PanicGoal;
@@ -32,6 +33,7 @@ public final class PassiveGoalInjector {
         ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> {
             if (entity instanceof Animal animal) {
                 inject(animal);
+                applySizeVariance(animal);
             }
         });
 
@@ -46,8 +48,17 @@ public final class PassiveGoalInjector {
                     return InteractionResult.FAIL;
                 }
                 if (!TamekindConfig.trustEnabled) return InteractionResult.PASS;
-                long until = level.getGameTime() + TamekindConfig.trustTicks;
+                long durationTicks = TamekindConfig.trustTicks;
+                if (animal instanceof net.minecraft.world.entity.TamableAnimal || isMountType(animal)) {
+                    durationTicks = (long) (durationTicks * TamekindConfig.mountFoodTrustMultiplier);
+                }
+                long until = level.getGameTime() + durationTicks;
                 AnimalMemoryStore.get(animal).addTrust(player.getUUID(), TamekindConfig.trustPerFeeding, until);
+                double existingTrust = AnimalMemoryStore.get(animal).trustScore(player.getUUID(), level.getGameTime());
+                if (existingTrust >= TamekindConfig.calmerBreedingTrustThreshold
+                        && !animal.isInLove() && !animal.isBaby()) {
+                    animal.setInLoveTime(TamekindConfig.calmerBreedingLoveTicks);
+                }
                 for (Animal herdMate : HerdCoordinator.nearbyHerd(animal)) {
                     AnimalMemoryStore.get(herdMate).addTrust(
                             player.getUUID(),
@@ -57,6 +68,24 @@ public final class PassiveGoalInjector {
             }
             return InteractionResult.PASS;
         });
+    }
+
+    private static boolean isMountType(Animal animal) {
+        var id = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(animal.getType()).getPath();
+        return id.contains("horse") || id.equals("donkey") || id.equals("mule")
+                || id.equals("llama") || id.equals("trader_llama") || id.equals("camel")
+                || id.equals("pig") || id.equals("strider");
+    }
+
+    private static void applySizeVariance(Animal animal) {
+        if (!TamekindConfig.sizeVarianceEnabled) return;
+        var attr = animal.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.SCALE);
+        if (attr == null) return;
+        long seed = animal.getUUID().getLeastSignificantBits();
+        java.util.Random r = new java.util.Random(seed);
+        double variance = TamekindConfig.sizeVarianceRange;
+        double scale = 1.0 + (r.nextDouble() * 2.0 - 1.0) * variance;
+        attr.setBaseValue(scale);
     }
 
     private static boolean shouldBlockCrowdedBreeding(Animal animal) {
@@ -90,6 +119,7 @@ public final class PassiveGoalInjector {
         accessor.tamekind$goalSelector().addGoal(12, new FollowTrustedPlayerGoal(animal));
         accessor.tamekind$goalSelector().addGoal(13, new MatingDisplayGoal(animal));
         accessor.tamekind$goalSelector().addGoal(14, new PetIdleBondGoal(animal));
+        accessor.tamekind$goalSelector().addGoal(15, new WallowGoal(animal));
     }
 
     private static boolean hasTamekindGoal(Animal animal) {

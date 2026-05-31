@@ -87,6 +87,11 @@ public final class TamekindConfig {
     public static int idleBondTickInterval = 20 * 30;
     public static double idleBondTrustGain = 0.01;
     public static int idleBondRadius = 8;
+    public static boolean sizeVarianceEnabled = true;
+    public static double sizeVarianceRange = 0.10;
+    public static double mountFoodTrustMultiplier = 4.0;
+    public static double calmerBreedingTrustThreshold = 0.4;
+    public static int calmerBreedingLoveTicks = 1200;
     public static double herdTrustShareMultiplier = 0.35;
     public static double trustedPlayerFleeReduction = 0.65;
 
@@ -265,6 +270,11 @@ public final class TamekindConfig {
         idleBondTickInterval = integer(properties, "idleBondTickInterval", idleBondTickInterval);
         idleBondTrustGain = decimal(properties, "idleBondTrustGain", idleBondTrustGain);
         idleBondRadius = integer(properties, "idleBondRadius", idleBondRadius);
+        sizeVarianceEnabled = bool(properties, "sizeVarianceEnabled", sizeVarianceEnabled);
+        sizeVarianceRange = decimal(properties, "sizeVarianceRange", sizeVarianceRange);
+        mountFoodTrustMultiplier = decimal(properties, "mountFoodTrustMultiplier", mountFoodTrustMultiplier);
+        calmerBreedingTrustThreshold = decimal(properties, "calmerBreedingTrustThreshold", calmerBreedingTrustThreshold);
+        calmerBreedingLoveTicks = integer(properties, "calmerBreedingLoveTicks", calmerBreedingLoveTicks);
         herdTrustShareMultiplier = decimal(properties, "herdTrustShareMultiplier", herdTrustShareMultiplier);
         trustedPlayerFleeReduction = decimal(properties, "trustedPlayerFleeReduction", trustedPlayerFleeReduction);
     }
@@ -345,6 +355,11 @@ public final class TamekindConfig {
         properties.setProperty("idleBondTickInterval", Integer.toString(idleBondTickInterval));
         properties.setProperty("idleBondTrustGain", Double.toString(idleBondTrustGain));
         properties.setProperty("idleBondRadius", Integer.toString(idleBondRadius));
+        properties.setProperty("sizeVarianceEnabled", Boolean.toString(sizeVarianceEnabled));
+        properties.setProperty("sizeVarianceRange", Double.toString(sizeVarianceRange));
+        properties.setProperty("mountFoodTrustMultiplier", Double.toString(mountFoodTrustMultiplier));
+        properties.setProperty("calmerBreedingTrustThreshold", Double.toString(calmerBreedingTrustThreshold));
+        properties.setProperty("calmerBreedingLoveTicks", Integer.toString(calmerBreedingLoveTicks));
         properties.setProperty("herdTrustShareMultiplier", Double.toString(herdTrustShareMultiplier));
         properties.setProperty("trustedPlayerFleeReduction", Double.toString(trustedPlayerFleeReduction));
         return properties;

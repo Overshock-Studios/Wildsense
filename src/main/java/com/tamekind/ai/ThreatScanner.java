@@ -49,6 +49,8 @@ public final class ThreatScanner {
         if (!entity.isAlive()) return false;
         if (entity instanceof net.minecraft.world.entity.TamableAnimal tame
                 && (tame.isTame() || tame.isOrderedToSit())) return false;
+        if (entity instanceof net.minecraft.world.entity.Mob mob && mob.isBaby()
+                && entity.distanceToSqr(animal) < 9.0) return false;
         var holder = BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(entity.getType());
         if (holder.is(predatorsOf(animal))) return true;
         if (holder.is(TamekindTags.PREDATORS)) return true;
